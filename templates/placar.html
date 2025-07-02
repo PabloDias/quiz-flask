@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar de Recordes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* ALTERAÇÃO: Estilo para o container principal */
+        .placar-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        /* ALTERAÇÃO: Cor escura para o título */
+        .placar-container h1 { font-size: 3rem; margin-bottom: 2rem; color: #333; }
+    
+        .placar-list { list-style: none; padding: 0; max-width: 500px; margin: 2rem auto; }
+        .placar-list li {
+            /* Fundo da linha agora é um cinza bem claro */
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            /* ALTERAÇÃO: Cor escura para o texto da lista */
+            color: #333;
+        }
+    
+        .play-again-btn { background-color: #3498db; color: white; padding: 1rem 2rem; text-decoration: none; font-size: 1.5rem; font-weight: bold; border-radius: 8px; transition: background-color 0.2s; }
+        .play-again-btn:hover { background-color: #2980b9; }
+    
+        /* A linha destacada já tem um bom contraste, então não mudamos */
+        .placar-list li.highlight {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container placar-container">
+        <h1>🏆 Placar de Recordes 🏆</h1>
+        <a href="{{ url_for('home') }}" class="play-again-btn">Jogar Novamente</a>
+        
+        {# 1. Inicializamos uma 'flag' para controlar o destaque. Usamos uma lista para que ela possa ser alterada dentro do loop. #}
+        {% set highlight_done = [false] %}
+        
+        <ol class="placar-list">
+            {% for entrada in placar %}
+                {# 2. Verificamos se a entrada atual combina com o nick E os pontos recentes #}
+                {% set is_match = nick_recente and pontos_recentes != -1 and entrada.nick == nick_recente and entrada.pontos == pontos_recentes %}
+
+                {# 3. A classe 'highlight' só é adicionada se for a combinação correta E a nossa flag ainda não foi usada #}
+                <li class="{% if is_match and not highlight_done[0] %}highlight{% endif %}">
+                    <span class="rank">{{ loop.index }}.</span>
+                    <span class="nick">{{ entrada.nick }}</span>
+                    <span class="pontos">{{ entrada.pontos }} Pontos</span>
+                </li>
+
+                {# 4. Se destacamos uma linha, ativamos a flag para não destacarmos mais nenhuma #}
+                {% if is_match and not highlight_done[0] %}
+                    {% if highlight_done.pop() and highlight_done.append(true) %}{% endif %}
+                {% endif %}
+
+            {% else %}
+                <li>Ninguém marcou pontos ainda!</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <script>
+        // O script de rolagem continua o mesmo e vai funcionar perfeitamente!
+        document.addEventListener('DOMContentLoaded', function() {
+            const highlightedRow = document.querySelector('.highlight');
+            if (highlightedRow) {
+                highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+</body>
+</html>

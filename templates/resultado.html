@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado do Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+    .result-container {
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    /* ALTERAÇÃO: Cor escura para o título */
+    .result-container h1 { font-size: 3rem; margin-bottom: 2rem; color: #333; }
+    
+    .result-container .acertos-label {
+        font-size: 1.5rem;
+        color: #555; /* Cinza um pouco mais claro */
+    }
+    .result-container .acertos-display {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #333; /* Cor escura */
+    }
+
+    .result-container .score-label {
+        font-size: 1.5rem;
+        color: #555;
+    }
+    .result-container .score-display {
+        font-size: 5rem;
+        font-weight: bold;
+        color: #3498db; /* Azul para destacar os pontos */
+        margin-bottom: 3rem;
+    }
+
+        /* Estilo para o formulário de nick */
+        .save-form {
+            display: flex;
+            flex-direction: column; /* Coloca os itens um abaixo do outro */
+            align-items: center;  /* Centraliza os itens */
+            gap: 1rem; /* Espaço entre o input e o botão */
+        }
+        .save-form input {
+            padding: 0.8rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .save-form button {
+            background-color: #2ecc71; color: white; padding: 1rem 2rem;
+            text-decoration: none; font-size: 1.2rem; font-weight: bold;
+            border-radius: 8px; transition: background-color 0.2s; border: none; cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+        }
+        .save-form button:hover { background-color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="container result-container">
+        <h1>Quiz Finalizado!</h1>
+        
+        <p class="acertos-label">Questões Acertadas</p>
+        <div class="acertos-display">{{ acertos }} / {{ total }}</div>
+        
+        <p class="score-label">Pontuação Final</p>
+        <div class="score-display">{{ pontuacao }}</div>
+
+        <form class="save-form" action="{{ url_for('salvar_pontuacao') }}" method="post">
+            <input type="text" name="nick" placeholder="Digite seu nick" required maxlength="15">
+            <button type="submit">Salvar e Ver Placar</button>
+        </form>
+    </div>
+</body>
+</html>

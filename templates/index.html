@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="question-header">
+        <h1>{{ pergunta }}</h1>
+        </header>
+
+    <main class="media-container">
+        <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">        
+    </main>
+    <footer class="options-footer">
+        <form id="quiz-form" action="{{ url_for('responder', id_pergunta=id_pergunta) }}" method="post">
+            <input type="hidden" name="tempo_levado" id="tempo-levado-input" value="30">
+            <div class="options-grid">
+                {% for opcao in opcoes %}
+                    <button type="submit" name="opcao" value="{{ opcao.texto }}" class="option-button" style="background-color: {{ opcao.cor }};">
+                        <span class="icon">{{ opcao.icone }}</span>
+                        <span class="text">{{ opcao.texto }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </form>
+    </footer>
+
+    <script>
+        const tempoLevadoInput = document.getElementById('tempo-levado-input');
+        const form = document.getElementById('quiz-form');
+        const tempoTotal = 30;
+        let tempoRestante = tempoTotal;
+
+        const timerInterval = setInterval(() => {
+            tempoRestante--;
+            if (tempoRestante <= 0) {
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+
+        form.addEventListener('submit', function() {
+            clearInterval(timerInterval);
+            let tempoDecorrido = tempoTotal - tempoRestante;
+            if (tempoDecorrido > tempoTotal) {
+                tempoDecorrido = tempoTotal;
+            }
+            tempoLevadoInput.value = tempoDecorrido;
+        });
+    </script>
+</body>
+</html>

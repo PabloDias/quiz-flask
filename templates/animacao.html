@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculando Resultado...</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* ALTERAÇÃO: Adicionamos um fundo branco semitransparente ao container */
+        .anim-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundo branco com 90% de opacidade */
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .anim-container img {
+            max-width: 200px;
+            margin-bottom: 2rem;
+        }
+        .anim-container h2 {
+            font-size: 2rem;
+            /* ALTERAÇÃO: Cor do texto agora é escura */
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container anim-container">
+        <img src="{{ url_for('static', filename='img/vaquinha.gif') }}" alt="Calculando...">
+        <h2>Calculando sua pontuação...</h2>
+    </div>
+
+    <script>
+        // Esta função espera 3000 milissegundos (3 segundos) antes de executar.
+        setTimeout(function() {
+            // Após 3 segundos, ele muda a página para a rota '/resultado'.
+            window.location.href = "{{ url_for('resultado') }}";
+        }, 3000); 
+    </script>
+</body>
+</html>

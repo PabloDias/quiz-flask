@@ -1,0 +1,138 @@
+/* static/css/style.css */
+
+/* Remove margens e paddings padrão de tudo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    color: white; /* Cor padrão do texto */
+    
+    /* --- REGRAS PARA O NOVO PLANO DE FUNDO GLOBAL --- */
+    
+    /* 1. Define a sua imagem como fundo */
+    background-image: url('../img/fund.png');
+    
+    /* 2. Cor de fundo sólida caso a imagem falhe ou demore a carregar */
+    background-color: #3b287a;
+    
+    /* 3. Garante que a imagem cubra toda a tela sem distorcer */
+    background-size: cover;
+    
+    /* 4. Centraliza a imagem na tela */
+    background-position: center center;
+    
+    /* 5. Evita que a imagem se repita caso seja menor que a tela */
+    background-repeat: no-repeat;
+    
+    /* 6. Efeito profissional: o fundo fica fixo enquanto o conteúdo rola */
+    background-attachment: fixed;
+    
+    /* --- FIM DAS REGRAS DO PLANO DE FUNDO --- */
+
+    /* Mantemos o layout flexível que ajuda a organizar o conteúdo */
+    display: flex;
+    flex-direction: column;
+    /* Usamos min-height para garantir que o body ocupe a tela toda, mas possa crescer se necessário */
+    min-height: 100vh; 
+    margin: 0;
+}
+
+/* Estilo do cabeçalho da pergunta */
+.question-header {
+    background-color: white;
+    color: #333;
+    text-align: center;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Área central (futura imagem) */
+.media-container {
+    flex-grow: 1; /* Faz esta área ocupar todo o espaço restante */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.media-container img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+}
+
+/* Rodapé com os botões */
+.options-footer {
+    padding: 1rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto; /* Centraliza a grade */
+}
+
+/* Estilo base dos botões de opção */
+.option-button {
+    color: white;
+    border: none;
+    padding: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    
+    display: flex; /* Para alinhar ícone e texto */
+    align-items: center;
+    min-height: 100px; /* Altura mínima */
+}
+
+.option-button:hover {
+    filter: brightness(1.1); /* Deixa um pouco mais claro */
+    transform: scale(1.03); /* Aumenta um pouco */
+}
+
+.option-button .icon {
+    font-size: 2rem; /* Um pouco menor para caber melhor */
+    font-weight: bold; /* Deixa a letra mais forte */
+    margin-right: 1.5rem;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.option-button .text {
+    flex-grow: 1; /* O texto ocupa o espaço restante */
+    text-align: left;
+}
+
+/* Estilo para a imagem/GIF dentro do media-container */
+.media-container img {
+    /* A largura continua sendo no máximo 600px e ocupando 100% do seu container */
+    max-width: 600px;
+    width: 100%;
+
+    /* --- A MUDANÇA PRINCIPAL ESTÁ AQUI --- */
+    /* A altura da imagem pode ter, no máximo, 40% da altura total da tela. */
+    /* Você pode ajustar este valor (ex: 30vh ou 50vh) para ver o que fica melhor! */
+    max-height: 40vh;
+
+    /* Esta propriedade garante que a imagem inteira apareça e mantenha sua proporção,
+       sem ser cortada ou esticada, dentro do espaço que definimos. É mais moderno. */
+    object-fit: contain;
+    
+    border-radius: 8px;
+}
