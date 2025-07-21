@@ -50,5 +50,33 @@
             tempoLevadoInput.value = tempoDecorrido;
         });
     </script>
+
+    <script>
+        const botoesDeResposta = document.querySelectorAll('.option-button');
+
+        document.addEventListener('keydown', function(event) {
+            
+            // Verifica qual tecla foi pressionada usando event.key
+            switch (event.key) {
+                case 'ArrowUp': // Seta para Cima
+                    // Simula um clique no primeiro botão (A)
+                    botoesDeResposta[0].click();
+                    break;
+                case 'ArrowRight': // Seta para Direita
+                    // Simula um clique no segundo botão (B)
+                    botoesDeResposta[1].click();
+                    break;
+                case 'ArrowDown': // Seta para Baixo
+                    // Simula um clique no terceiro botão (C)
+                    botoesDeResposta[2].click();
+                    break;
+                case 'ArrowLeft': // Seta para Esquerda
+                    // Simula um clique no quarto botão (D)
+                    botoesDeResposta[3].click();
+                    break;
+            }
+        });
+    </script>
+
 </body>
 </html>
