@@ -75,7 +75,25 @@
         }
         .start-btn.mode-learn:hover {
             background-color: #2980b9;
-        }        
+        }
+        
+        .config-btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem;
+            color: #333;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .config-btn:hover {
+            background-color: #bdc3c7;
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
@@ -92,6 +110,10 @@
                 Modo Aprendizagem
                 <small>Revise cada resposta</small>
             </a>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('configuracao') }}" class="config-btn">Configurações</a>
         </div>
     </div>
 </body>
