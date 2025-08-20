@@ -1,0 +1,141 @@
+---
+Qual desses é um peixe muito cultivado no Maranhão?
+explicacao: A tambatinga é uma das espécies mais cultivadas no estado por sua adaptação e rápido crescimento.
+*Tambatinga.
+Tilápia.
+Salmão.
+Dourado.
+---
+No cultivo de camarões, qual é a cor mais comum da espécie Litopenaeus vannamei?
+explicacao: O camarão Litopenaeus vannamei é conhecido como camarão-cinza, de coloração cinza-clara.
+*Cinza.
+Azul.
+Amarela.
+Vermelha.
+---
+Qual é o principal  benefício do uso de aeradores nos viveiros de peixes?
+explicacao: Os aeradores aumentam o oxigênio dissolvido, essencial para a sobrevivência dos peixes.
+*Aumentar o oxigênio dissolvido.
+Diminuir a temperatura da água.
+Reduzir a profundidade.
+Aumentar a salanidade.
+---
+Em um viveiro escavado, por que é importante manter as margens com inclinação suave?
+explicacao: A inclinação suave ajuda no manejo e previne o desmoronamento das margens.
+*Facilita o acesso e reduz erosão.
+Aumenta a profundidade.
+Melhora a cor da água.
+Diminui a evaporação.
+---
+Qual destes não é um peixe de água doce?
+explicacao: A pescada vive em águas salgadas, não em água doce.
+*Pescada.
+Tambaqui.
+Pacu.
+Tilápia.
+---
+Qual destes é um parâmetro importante na qualidade da água para peixes?
+explicacao: O oxigênio dissolvido é essencial para a respiração dos peixes.
+*Oxigênio dissolvido.
+Cor da balança.
+Tipo de isca.
+Cor da ração.
+---
+Qual alimento é tecnicamente recomendado como ração inicial para os alevinos ou larvas de peixe?
+explicacao: A ração farelada é recomendada considerando sua granlumetria minúscula, facilitando a alimentação dos alevinos ou larvas. 
+*Ração farelada.
+Artemia.
+Milho triturado.
+Restos de vegetais.
+---
+Em psicultura, a sigla 'FCR' significa?
+explicacao: O FCR indica quanto de ração é necessário para produzir 1 kg de peixe.
+*Fator de Conversão de Ração.
+Frequência de Crescimento Rápido.
+Ficha de Controle de Reprodução.
+Fonte de Cloro Residual.
+---
+Qual é a profundidade média de um viveiro escavado para peixes?
+explicacao: Essa profundidade mantém a temperatura estável e facilita o manejo.
+*1,2 a 1,5 m.
+0,5 m.
+3 m.
+5 m.
+---
+Qual equipamento ajuda a remover partículas em suspensão na água?
+explicacao: O decantador permite que partículas sólidas se depositem, melhorando a qualidade da água.
+*Decantador.
+Aerador.
+Tanque-rede.
+Oxigenador.
+---
+No cultivo de camarões, qual a função da calagem?
+explicacao: A calagem ajusta o pH e melhora as condições para cultivo.
+*Corrigir a acidez do solo e da água.
+Aumentar a salinidade.
+Aumentar a profundidade.
+Reduzir a temperatura.
+---
+A troca parcial de água em viveiros ajuda a:
+explicacao: A troca parcial remove resíduos e mantém parâmetros adequados.
+*Melhorar a qualidade da água.
+Aumentar a temperatura.
+Reduzir a oxigenação.
+Dificultar a alimentação.
+---
+Qual destes é um peixe amazônico cultivado no Maranhão?
+explicacao: O tambaqui é uma espécie nativa da Amazônia e cultivada em várias regiões do Maranhão.
+*Tambaqui.
+Salmão.
+Bacalhau.
+Robalo.
+---
+Qual é a principal função do tanque-rede?
+explicacao: Os tanques-rede permitem o cultivo em ambientes naturais, controlando o estoque.
+*Conter peixes em rios ou lagos.
+Aumentar a temperatura da água.
+Reduzir a turbidez.
+Desinfetar a água.
+---
+No Maranhão, qual é a temperatura ideal da água para o cultivo de Tambatinga?
+explicacao: A tambatinga apresenta bom crescimento nessa faixa de temperatura.
+*28 a 30°C.
+10 a 15°C.
+5 a 10°C.
+35 a 40°C.
+---
+Qual é o principal risco de superlotação em viveiros?
+explicacao: A superlotação reduz o oxigênio e aumenta o estresse e as doenças.
+*Baixo oxigênio e mortalidade.
+Aumento da produtividade.
+Redução de doenças.
+Crescimento acelerado.
+---
+Em aquicultura, a biomassa significa:
+explicacao: A biomassa é usada para calcular a ração e a densidade de cultivo.
+*Peso total dos peixes ou camarões.
+Quantidade total de ração.
+Área do viveiro.
+Volume de água.
+---
+A ração extrusada flutua porque:
+explicacao: A extrusão insere ar, fazendo a ração flutuar.
+*É expandida com ar durante o processamento.
+É mais pesada.
+Contém óleo.
+É prensada.
+---
+O monitoramento da qualidade da água deve ser feito:
+explicacao: O monitoramento diário evita problemas e mantém o ambiente saudável.
+*Todos os dias.
+Uma vez por mês.
+Somente na colheita.
+Apenas quando houver mortalidade.
+---
+Qual é o principal objetivo da despesca?
+explicacao: A despesca é a etapa final do cultivo, retirando os animais para comercialização.
+*Retirar os peixes para venda ou processamento.
+Limpar o viveiro.
+Adubar a água.
+Soltar peixes no rio.
+---

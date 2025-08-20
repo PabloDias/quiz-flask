@@ -12,8 +12,19 @@
         </header>
 
     <main class="media-container">
-        <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">        
+        {% if modo == 'piscicultura' %}
+        
+            {% if id_pergunta % 2 == 0 %}
+                <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
+            {% else %}
+                <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
+            {% endif %}
+
+        {% else %}
+            <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
+        {% endif %}
     </main>
+
     <footer class="options-footer">
         <form id="quiz-form" action="{{ url_for('responder', id_pergunta=id_pergunta) }}" method="post">
             <input type="hidden" name="tempo_levado" id="tempo-levado-input" value="30">

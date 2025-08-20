@@ -9,5 +9,10 @@ __pycache__/
 # Arquivos de sessão do Flask
 flask_session/
 
+# Arquivos e pastas do PyInstaller
+build/
+dist/
+*.spec
+
 # Outros
 .DS_Store

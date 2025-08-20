@@ -25,7 +25,7 @@
         /* --- ESTILO DA IMAGEM ATUALIZADO --- */
         .home-container .dev-image {
             /* Definimos uma largura máxima para a imagem em telas grandes */
-            max-width: 650px;
+            max-width: 800px;
             /* Isso garante que ela se ajuste em telas menores */
             width: 100%;
             /* A altura agora é automática para manter a proporção original da foto */
@@ -76,6 +76,14 @@
         .start-btn.mode-learn:hover {
             background-color: #2980b9;
         }
+
+        /* Cor para o modo piscultura */
+        .start-btn.mode-piscicultura {
+            background-color: #16a085; 
+        }
+        .start-btn.mode-piscicultura:hover {
+            background-color: #1abc9c;
+        }
         
         .config-btn {
             display: inline-block;
@@ -98,23 +106,79 @@
 </head>
 <body>
     <div class="container home-container">
-               
-        <img src="{{ url_for('static', filename='img/dev(PF).jpg') }}" alt="Desenvolvedores" class="dev-image">
         
-        <div class="modes-container">
-            <a href="{{ url_for('iniciar_jogo', modo_de_jogo='classico') }}" class="start-btn">
-                Modo Clássico
-                <small>Rápido e Desafiador</small>
-            </a>
-            <a href="{{ url_for('iniciar_jogo', modo_de_jogo='aprendizagem') }}" class="start-btn mode-learn">
-                Modo Aprendizagem
-                <small>Revise cada resposta</small>
-            </a>
-        </div>
+        {% if session.get('access_level') %}
 
-        <div style="margin-top: 2rem;">
-            <a href="{{ url_for('configuracao') }}" class="config-btn">Configurações</a>
-        </div>
+            <img src="{{ url_for('static', filename='img/teste2.png') }}" alt="Desenvolvedores" class="dev-image">
+            
+            <div class="modes-container">
+
+                {% if session.get('access_level') == 'todos' %}
+                    <a href="{{ url_for('iniciar_jogo', modo_de_jogo='classico') }}" class="start-btn">
+                        Modo Clássico
+                        <small>Rápido e Desafiador</small>
+                    </a>
+                    <a href="{{ url_for('iniciar_jogo', modo_de_jogo='aprendizagem') }}" class="start-btn mode-learn">
+                        Modo Aprendizagem
+                        <small>Revise cada resposta</small>
+                    </a>
+                {% endif %}
+
+                <a href="{{ url_for('iniciar_jogo', modo_de_jogo='piscicultura') }}" class="start-btn mode-piscicultura">
+                    Modo Piscicultura
+                    <small>Tema Especializado</small>
+                </a>
+            </div>
+
+            {% if session.get('access_level') == 'todos' %}
+                <div style="margin-top: 2rem;">
+                    <a href="{{ url_for('configuracao') }}" class="config-btn">Configurações</a>
+                </div>
+            {% endif %}
+
+        {% else %}
+
+            <h1 class="quiz-title">Bem-vindo ao Quiz!</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Por favor, insira o código de acesso para continuar.</p>
+            
+            <form action="{{ url_for('login') }}" method="post" class="login-form">
+                <input type="text" name="codigo_acesso" placeholder="Código de Acesso" required>
+                <button type="submit">Entrar</button>
+            </form>
+
+        {% endif %}
     </div>
+
+    <style>
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .login-form input {
+            padding: 1rem;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            text-align: center;
+            width: 80%;
+            max-width: 350px;
+        }
+        .login-form button {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            background-color: #3498db;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .login-form button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </body>
 </html>

@@ -6,35 +6,86 @@
     <title>Calculando Resultado...</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* ALTERAÇÃO: Adicionamos um fundo branco semitransparente ao container */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wrapper-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        /* Estilo para a caixa de animação (bloco de cima) */
         .anim-container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.9); /* Fundo branco com 90% de opacidade */
-            padding: 3rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            /* Regras de largura para expandir */
+            width: 90%;
+            max-width: 300px;
         }
-        .anim-container img {
+
+        .anim-container .timer-gif {
             max-width: 200px;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
+
         .anim-container h2 {
             font-size: 2rem;
-            /* ALTERAÇÃO: Cor do texto agora é escura */
             color: #333;
+        }
+
+        /* --- ATENÇÃO A ESTA PARTE --- */
+        /* Estilo para a caixa da imagem 'Todos.jpg' (bloco de baixo) */
+        .secondary-container {
+            text-align: center;
+            /* GARANTIMOS QUE AS MESMAS REGRAS DE LARGURA ESTÃO AQUI */
+            width: 90%;
+            max-width: 900px;
+        }
+
+        .secondary-container .secondary-image {
+            /* A largura da imagem é 100% do container acima */
+            width: 100%;
+            /* A altura é automática para manter a proporção */
+            height: auto;
+            /* Limitamos a largura máxima da imagem em si */
+            max-width: 900px;
+            
+            border-radius: 10px;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
-    <div class="container anim-container">
-        <img src="{{ url_for('static', filename='img/vaquinha.gif') }}" alt="Calculando...">
-        <h2>Calculando sua pontuação...</h2>
+    <div class="wrapper-vertical">
+
+        <div class="container anim-container">
+            {% if modo == 'piscicultura' %}
+                <img class="timer-gif" src="{{ url_for('static', filename='img/fish_placar.gif') }}" alt="Calculando...">
+            {% else %}
+                <img class="timer-gif" src="{{ url_for('static', filename='img/vaquinha.gif') }}" alt="Calculando...">
+            {% endif %}
+            
+            <h2>Calculando sua pontuação...</h2>
+        </div>
+
+        <div class="secondary-container">
+            <img class="secondary-image" src="{{ url_for('static', filename='img/todos.png') }}" alt="Equipe">
+        </div>
+
     </div>
 
     <script>
-        // Esta função espera 3000 milissegundos (3 segundos) antes de executar.
         setTimeout(function() {
-            // Após 3 segundos, ele muda a página para a rota '/resultado'.
             window.location.href = "{{ url_for('resultado') }}";
         }, 3000); 
     </script>

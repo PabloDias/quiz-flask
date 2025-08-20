@@ -42,7 +42,11 @@
 </head>
 <body>
     <header class="question-header">
-        <h1>{{ revisao.pergunta }}</h1>
+        {% if revisao.explicacao %}
+            <h1>{{ revisao.explicacao }}</h1>
+        {% else %}
+            <h1>{{ revisao.pergunta }}</h1>
+        {% endif %}
     </header>
 
     <main class="media-container"></main>

@@ -1,6 +1,14 @@
 [
     {
+        "nick": "jhf",
+        "pontos": 1000
+    },
+    {
         "nick": "asdas",
+        "pontos": 0
+    },
+    {
+        "nick": "Teste",
         "pontos": 0
     }
 ]
