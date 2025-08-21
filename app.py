@@ -258,3 +258,23 @@ def exibir_placar(modo):
     pontos_recentes = int(request.args.get('pontos_recentes', -1))
     placar = carregar_placar(modo)
     return render_template('placar.html', placar=placar, modo=modo, nick_recente=nick_recente, pontos_recentes=pontos_recentes)
+
+@app.route('/limpar-placar', methods=['POST'])
+def limpar_placar():
+    """Apaga o arquivo de placar para o modo de jogo selecionado."""
+    modo = request.form.get('modo_para_limpar')
+    
+    if modo in ['classico', 'aprendizagem', 'piscicultura']:
+        # Constrói o nome do arquivo de placar para o modo específico
+        nome_arquivo = resource_path(f"placar_{modo}.json")
+        try:
+            # Tenta remover o arquivo
+            os.remove(nome_arquivo)
+            print(f"Placar '{nome_arquivo}' foi limpo com sucesso.")
+        except FileNotFoundError:
+            # Se o arquivo não existir, não faz nada, apenas informa no console
+            print(f"Placar '{nome_arquivo}' não encontrado, nada a limpar.")
+            pass
+            
+    # Redireciona de volta para a página de configuração
+    return redirect(url_for('configuracao'))
