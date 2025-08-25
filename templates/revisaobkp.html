@@ -6,63 +6,51 @@
     <title>Revisando Resposta...</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
+        /* --- ESTILOS ATUALIZADOS PARA A TELA DE REVISÃO --- */
         body {
             justify-content: center;
         }
 
-        /* O header agora fica vazio, mas podemos manter uma altura mínima para equilibrar o layout */
-        .question-header {
-            min-height: 80px;
-            opacity: 100%;
-        }
-
-        /* NOVO: Estilo para a caixa da explicação no centro da tela */
-        .explanation-box {
-            background-color: rgba(255, 255, 255, 0.95); /* Fundo branco quase opaco */
-            color: #333;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            max-width: 80%;
-            font-size: 2.8rem; /* Tamanho da fonte da explicação */
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* Estilos dos botões (sem alteração) */
+        /* Destaque para a resposta CORRETA */
         .option-button.correcta {
-            background-color: #ffffff !important;
+            background-color: #ffffff !important; /* Destaque branco */
             color: #333 !important;
             transform: scale(1.05);
             border: 4px solid #3498db;
         }
+
+        /* Destaque para a resposta ERRADA que o jogador selecionou */
         .option-button.errada-selecionada {
-            background-color: #e74c3c !important;
-            opacity: 0.8;
+            background-color: #e74c3c !important; /* Vermelho */
+            opacity: 0.8; /* Mantém uma leve opacidade */
         }
+
+        /* Estilo para as outras respostas (nem certa, nem selecionada) */
         .option-button.outra {
-            opacity: 0.6;
+            opacity: 0.6; /* Apenas diminui a opacidade, sem o filtro cinza */
         }
+
+        
         .option-button .text {
             visibility: hidden;
         }
+
+        /* Botão correto */
         .option-button.correcta .text {
             visibility: visible;
         }
     </style>
 </head>
 <body>
-   
+    <header class="question-header">
+        {% if revisao.explicacao %}
+            <h1>{{ revisao.explicacao }}</h1>
+        {% else %}
+            <h1>{{ revisao.pergunta }}</h1>
+        {% endif %}
+    </header>
 
-    <main class="media-container">
-        <div class="explanation-box">
-            {% if revisao.explicacao %}
-                {{ revisao.explicacao }}
-            {% else %}
-                {{ revisao.pergunta }}
-            {% endif %}
-        </div>
-    </main>
+    <main class="media-container"></main>
 
     <footer class="options-footer">
         <div class="options-grid">
@@ -97,7 +85,7 @@
     </footer>
 
     <script>
-        // O tempo de 10 segundos continua o mesmo
+        // O script para avançar 10 segundos depois
         setTimeout(function() {
             {% if proximo_id < session.get('ordem_perguntas')|length %}
                 window.location.href = "{{ url_for('exibir_pergunta', id_pergunta=proximo_id) }}";

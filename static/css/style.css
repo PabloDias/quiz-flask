@@ -14,7 +14,7 @@ body {
     /* --- REGRAS PARA O NOVO PLANO DE FUNDO GLOBAL --- */
     
     /* 1. Define a sua imagem como fundo */
-    background-image: url('../img/fund.png');
+    background-image: url('../img/fundo(expoema).jpg');
     
     /* 2. Cor de fundo sólida caso a imagem falhe ou demore a carregar */
     background-color: #3b287a;
