@@ -170,10 +170,15 @@ def exibir_pergunta(id_pergunta):
         random.shuffle(opcoes_para_embaralhar)
         session['ordem_respostas_atual'] = opcoes_para_embaralhar
         opcoes_formatadas = []
+        # kahoot_defaults = [
+        #    {'cor': '#2ecc71', 'icone': 'A'},
+        #    {'cor': '#5d9cec', 'icone': 'B'},5d9cec
+        #    {'cor': '#1abc9c', 'icone': 'C'},
+        #    {'cor': '#7f8c8d', 'icone': 'D'}7f8c8d
         kahoot_defaults = [
-            {'cor': '#2ecc71', 'icone': 'A'},
+            {'cor': '#c0392b', 'icone': 'A'},
             {'cor': '#3498db', 'icone': 'B'},
-            {'cor': '#1abc9c', 'icone': 'C'},
+            {'cor': '#e67e22', 'icone': 'C'},
             {'cor': '#9b59b6', 'icone': 'D'}
         ]
         for texto_opcao, default in zip(opcoes_para_embaralhar, kahoot_defaults):

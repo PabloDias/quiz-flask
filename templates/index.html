@@ -13,16 +13,21 @@
 
     <main class="media-container">
         {% if modo == 'piscicultura' %}
-        
-            {% if id_pergunta % 2 == 0 %}
-                <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
-            {% else %}
-                <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
-            {% endif %}
+                
+                {% if id_pergunta % 2 == 0 %}
+                    <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
+                {% endif %}
 
-        {% else %}
-            <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
-        {% endif %}
+            {% else %}
+                {% if id_pergunta % 2 == 0 %}
+                    <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/fazenda1.gif') }}" alt="Tempo correndo...">
+                {% endif %}
+
+            {% endif %}
     </main>
 
     <footer class="options-footer">
