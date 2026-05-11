@@ -1,110 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisando Resposta...</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        body {
-            justify-content: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisando Resposta...</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body { flex-direction: column; }
 
-        /* O header agora fica vazio, mas podemos manter uma altura mínima para equilibrar o layout */
-        .question-header {
-            min-height: 80px;
-            opacity: 100%;
-        }
+    /* ── Barra de contagem regressiva ── */
+    .revisao-bar {
+      height: 5px;
+      background: var(--surface2);
+      position: relative;
+      overflow: hidden;
+    }
+    .revisao-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 100%;
+      transition: width 10s linear;
+    }
 
-        /* NOVO: Estilo para a caixa da explicação no centro da tela */
-        .explanation-box {
-            background-color: rgba(255, 255, 255, 0.95); /* Fundo branco quase opaco */
-            color: #333;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            max-width: 80%;
-            font-size: 2.8rem; /* Tamanho da fonte da explicação */
-            font-weight: bold;
-            text-align: center;
-        }
+    /* ── Caixa de explicação ── */
+    .media-container { flex-grow: 1; padding: 1rem; }
 
-        /* Estilos dos botões (sem alteração) */
-        .option-button.correcta {
-            background-color: #ffffff !important;
-            color: #333 !important;
-            transform: scale(1.05);
-            border: 4px solid #3498db;
-        }
-        .option-button.errada-selecionada {
-            background-color: #e74c3c !important;
-            opacity: 0.8;
-        }
-        .option-button.outra {
-            opacity: 0.6;
-        }
-        .option-button .text {
-            visibility: hidden;
-        }
-        .option-button.correcta .text {
-            visibility: visible;
-        }
-    </style>
+    .explanation-box {
+      background: rgba(15,23,42,.97);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.8rem 2rem;
+      max-width: 860px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .exp-badge {
+      display: inline-block;
+      font-size: 2.2rem;
+      margin-bottom: .8rem;
+    }
+    .exp-titulo {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: .6rem;
+    }
+    .exp-texto {
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ── Contador regressivo visual ── */
+    .exp-counter {
+      margin-top: 1.2rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .exp-counter span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ── Opções na revisão ── */
+    .options-footer { padding: .6rem .75rem; }
+    .options-grid   { gap: .6rem; }
+
+    .option-button { pointer-events: none; }
+
+    /* Correta: destaque branco com borda colorida */
+    .option-button.correcta {
+      background-color: #fff !important;
+      color: #1e293b !important;
+      border: 3px solid var(--green) !important;
+      transform: scale(1.03);
+      box-shadow: 0 0 24px rgba(16,185,129,.35);
+    }
+    .option-button.correcta .icon {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Errada selecionada */
+    .option-button.errada-selecionada {
+      background-color: var(--red) !important;
+      opacity: .9;
+    }
+
+    /* Demais opções */
+    .option-button.outra { opacity: .35; }
+
+    /* Texto oculto nas não-corretas */
+    .option-button .text         { visibility: hidden; }
+    .option-button.correcta .text { visibility: visible; }
+  </style>
 </head>
 <body>
-   
 
-    <main class="media-container">
-        <div class="explanation-box">
-            {% if revisao.explicacao %}
-                {{ revisao.explicacao }}
-            {% else %}
-                {{ revisao.pergunta }}
-            {% endif %}
-        </div>
-    </main>
+  <!-- Barra de progresso decrescente -->
+  <div class="revisao-bar">
+    <div class="revisao-bar-fill" id="rev-bar"></div>
+  </div>
 
-    <footer class="options-footer">
-        <div class="options-grid">
-            {% set defaults = [
-                {'cor': '#e74c3c', 'icone': 'A'},
-                {'cor': '#3498db', 'icone': 'B'},
-                {'cor': '#f1c40f', 'icone': 'C'},
-                {'cor': '#2ecc71', 'icone': 'D'}
-            ] %}
-            
-            {% for opcao_texto in revisao.opcoes_mostradas %}
-                {% set default = defaults[loop.index0] %}
-                
-                {% set is_correct = (opcao_texto == revisao.resposta_correta) %}
-                {% set is_player_choice = (opcao_texto == revisao.resposta_jogador) %}
-                
-                {% set extra_class = '' %}
-                {% if is_correct %}
-                    {% set extra_class = 'correcta' %}
-                {% elif is_player_choice %}
-                    {% set extra_class = 'errada-selecionada' %}
-                {% else %}
-                    {% set extra_class = 'outra' %}
-                {% endif %}
+  <!-- Explicação central -->
+  <main class="media-container">
+    <div class="explanation-box">
+      <div class="exp-badge">
+        {% if revisao.resposta_jogador == revisao.resposta_correta %}💡{% else %}❌{% endif %}
+      </div>
+      <div class="exp-titulo">
+        {% if revisao.resposta_jogador == revisao.resposta_correta %}Correto! Sabia mais?{% else %}Resposta Incorreta{% endif %}
+      </div>
+      <div class="exp-texto">
+        {% if revisao.explicacao %}
+          {{ revisao.explicacao }}
+        {% else %}
+          {{ revisao.pergunta }}
+        {% endif %}
+      </div>
+      <div class="exp-counter">Próxima em <span id="cnt">10</span>s</div>
+    </div>
+  </main>
 
-                <button class="option-button {{ extra_class }}" style="background-color: {{ default.cor }};" disabled>
-                    <span class="icon">{{ default.icone }}</span>
-                    <span class="text">{{ opcao_texto }}</span>
-                </button>
-            {% endfor %}
-        </div>
-    </footer>
+  <!-- Botões de revisão -->
+  <footer class="options-footer">
+    <div class="options-grid">
+      {% set defaults = [
+        {'cor': '#c0392b', 'icone': 'A'},
+        {'cor': '#3498db', 'icone': 'B'},
+        {'cor': '#e67e22', 'icone': 'C'},
+        {'cor': '#9b59b6', 'icone': 'D'}
+      ] %}
 
-    <script>
-        // O tempo de 10 segundos continua o mesmo
-        setTimeout(function() {
-            {% if proximo_id < session.get('ordem_perguntas')|length %}
-                window.location.href = "{{ url_for('exibir_pergunta', id_pergunta=proximo_id) }}";
-            {% else %}
-                window.location.href = "{{ url_for('animacao') }}";
-            {% endif %}
-        }, 10000);
-    </script>
+      {% for opcao_texto in revisao.opcoes_mostradas %}
+        {% set default = defaults[loop.index0] %}
+        {% set is_correct      = (opcao_texto == revisao.resposta_correta) %}
+        {% set is_player_choice = (opcao_texto == revisao.resposta_jogador) %}
+
+        {% if is_correct %}
+          {% set extra_class = 'correcta' %}
+        {% elif is_player_choice %}
+          {% set extra_class = 'errada-selecionada' %}
+        {% else %}
+          {% set extra_class = 'outra' %}
+        {% endif %}
+
+        <button class="option-button {{ extra_class }}"
+                style="background-color: {{ default.cor }};" disabled>
+          <span class="icon">{{ default.icone }}</span>
+          <span class="text">{{ opcao_texto }}</span>
+        </button>
+      {% endfor %}
+    </div>
+  </footer>
+
+  <script>
+    /* Barra decrescente */
+    requestAnimationFrame(() => {
+      document.getElementById('rev-bar').style.width = '0%';
+    });
+
+    /* Contador */
+    let cnt = 10;
+    const cntEl = document.getElementById('cnt');
+    const tick = setInterval(() => {
+      cnt--;
+      cntEl.textContent = cnt;
+      if (cnt <= 0) clearInterval(tick);
+    }, 1000);
+
+    /* Redirecionamento */
+    setTimeout(function() {
+      {% if proximo_id < session.get('ordem_perguntas')|length %}
+        window.location.href = "{{ url_for('exibir_pergunta', id_pergunta=proximo_id) }}";
+      {% else %}
+        window.location.href = "{{ url_for('animacao') }}";
+      {% endif %}
+    }, 10000);
+  </script>
 </body>
 </html>

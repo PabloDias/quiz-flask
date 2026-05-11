@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — Pergunta {{ id_pergunta + 1 }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* ═══════════════════════════════════════════
+       Layout: ocupa 100vh sem scroll
+       Pilha vertical: barra → pergunta → mídia → rodapé
+    ═══════════════════════════════════════════ */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ── Barra de progresso ── */
+    .top-bar {
+      flex-shrink: 0;
+      height: 8px;
+      background: var(--surface2);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #818cf8);
+      border-radius: 0 4px 4px 0;
+      transition: width 1s linear;
+    }
+
+    /* ── Cabeçalho da pergunta ── */
+    .question-header {
+      flex-shrink: 0;
+      margin: clamp(.4rem, 1vh, .8rem) clamp(.5rem, 1.5vw, 1.2rem);
+      padding: clamp(.7rem, 1.5vh, 1.2rem) clamp(1rem, 2vw, 1.8rem);
+      border-radius: 12px;
+    }
+    .question-header h1 {
+      font-size: clamp(1.1rem, 2.4vw, 2rem);
+      line-height: 1.3;
+    }
+
+    /* .media-container e .media-container img:
+       tamanho do GIF controlado pelas variáveis
+       --gif-largura-* e --gif-altura-max em style.css */
+
+    /* Timer — tamanho responsivo */
+    .timer-wrap {
+      position: relative;
+      width:  clamp(64px, 7vw, 100px);
+      height: clamp(64px, 7vw, 100px);
+      flex-shrink: 0;
+    }
+    .timer-wrap svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .timer-track { fill: none; stroke: var(--surface2); stroke-width: 5; }
+    .timer-arc   {
+      fill: none; stroke: var(--accent); stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 188; stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke .4s;
+    }
+    .timer-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+    }
+    .timer-num.urgent { color: var(--red); }
+
+    /* .options-footer, .options-grid, .option-button e .option-button .icon:
+       controlados pelas variáveis --btn-* e --icone-* em style.css   */
+
+    /* Cores por posição */
+    .option-button:nth-child(1) { background: var(--op-a); }
+    .option-button:nth-child(2) { background: var(--op-b); }
+    .option-button:nth-child(3) { background: var(--op-c); }
+    .option-button:nth-child(4) { background: var(--op-d); }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de progresso -->
+  <div class="top-bar">
+    <div class="progress-fill" id="progress-bar" style="width:100%"></div>
+  </div>
+
+  <!-- Pergunta -->
+  <header class="question-header">
+    <h1>{{ pergunta }}</h1>
+  </header>
+
+  <!-- GIF + Timer -->
+  <main class="media-container">
+    {% if modo == 'piscicultura' %}
+      {% if id_pergunta % 2 == 0 %}
+        <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
+      {% endif %}
+    {% else %}
+      {% if id_pergunta % 2 == 0 %}
+        <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/fazenda1.gif') }}" alt="Tempo correndo...">
+      {% endif %}
+    {% endif %}
+
+    <div class="timer-wrap">
+      <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <circle class="timer-track" cx="36" cy="36" r="30"/>
+        <circle class="timer-arc"   cx="36" cy="36" r="30" id="timer-arc"/>
+      </svg>
+      <div class="timer-num" id="timer-num">30</div>
+    </div>
+  </main>
+
+  <!-- Botões -->
+  <footer class="options-footer">
+    <form id="quiz-form" action="{{ url_for('responder', id_pergunta=id_pergunta) }}" method="post">
+      <input type="hidden" name="tempo_levado" id="tempo-levado-input" value="30">
+      <div class="options-grid">
+        {% for opcao in opcoes %}
+          <button type="submit" name="opcao" value="{{ opcao.texto }}"
+                  class="option-button" style="background-color: {{ opcao.cor }};">
+            <span class="icon">{{ opcao.icone }}</span>
+            <span class="text">{{ opcao.texto }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    </form>
+  </footer>
+
+  <script>
+    const TEMPO_TOTAL = 30;
+    let tempoRestante = TEMPO_TOTAL;
+    const arcEl      = document.getElementById('timer-arc');
+    const numEl      = document.getElementById('timer-num');
+    const barEl      = document.getElementById('progress-bar');
+    const formEl     = document.getElementById('quiz-form');
+    const inputTempo = document.getElementById('tempo-levado-input');
+
+    /* Circunferência real calculada do SVG (r=30) */
+    const CIRCUNF = 2 * Math.PI * 30;
+    arcEl.style.strokeDasharray  = CIRCUNF;
+    arcEl.style.strokeDashoffset = 0;
+
+    function atualizar() {
+      const ratio = tempoRestante / TEMPO_TOTAL;
+      arcEl.style.strokeDashoffset = CIRCUNF * (1 - ratio);
+      arcEl.style.stroke = tempoRestante <= 6 ? '#ef4444' : '#6366f1';
+      barEl.style.width  = (ratio * 100) + '%';
+      numEl.textContent  = tempoRestante;
+      numEl.classList.toggle('urgent', tempoRestante <= 6);
+    }
+
+    atualizar();
+
+    const intervalo = setInterval(() => {
+      tempoRestante--;
+      atualizar();
+      if (tempoRestante <= 0) clearInterval(intervalo);
+    }, 1000);
+
+    formEl.addEventListener('submit', function() {
+      clearInterval(intervalo);
+      inputTempo.value = Math.min(TEMPO_TOTAL - tempoRestante, TEMPO_TOTAL);
+    });
+
+    /* Atalhos teclado físico */
+    const botoes = document.querySelectorAll('.option-button');
+    document.addEventListener('keydown', function(e) {
+      switch (e.key) {
+        case 'ArrowUp':    botoes[0]?.click(); break;
+        case 'ArrowRight': botoes[1]?.click(); break;
+        case 'ArrowDown':  botoes[2]?.click(); break;
+        case 'ArrowLeft':  botoes[3]?.click(); break;
+      }
+    });
+  </script>
+</body>
+</html>

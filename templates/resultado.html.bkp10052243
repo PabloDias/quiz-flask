@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultado — Quiz SAGRIMA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { height: 100%; }
+    body {
+      justify-content: center;
+      align-items: center;
+      padding: clamp(.8rem, 2vh, 1.5rem);
+      overflow: auto;
+    }
+
+    /* ── Layout lado a lado ── */
+    .result-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(1rem, 2vw, 2rem);
+      max-width: 1400px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Coluna da imagem ── */
+    .col-img {
+      flex: 0 1 clamp(180px, 22vw, 380px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+    }
+    .col-img img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .col-img p {
+      font-size: clamp(.7rem, 1vw, .9rem);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ── Coluna resultado + teclado ── */
+    .col-result {
+      flex: 1 1 clamp(320px, 50vw, 680px);
+      background: rgba(15,23,42,.97);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 2vh, 1.8rem) clamp(1rem, 2vw, 1.8rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(.4rem, 1vh, .7rem);
+    }
+
+    .result-emoji { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+
+    .result-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+      font-weight: 800;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .result-stats {
+      display: flex;
+      gap: clamp(.6rem, 1.5vw, 1.2rem);
+      margin: .2rem 0;
+    }
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(.6rem, 1.2vh, 1rem) clamp(.8rem, 2vw, 1.5rem);
+      text-align: center;
+      min-width: clamp(80px, 10vw, 140px);
+    }
+    .stat-val {
+      font-family: var(--font-head);
+      font-size: clamp(1.4rem, 3vw, 2.5rem);
+      font-weight: 800;
+    }
+    .stat-val.blue  { color: var(--blue); }
+    .stat-val.green { color: var(--green); }
+    .stat-label {
+      font-size: clamp(.65rem, 1vw, .85rem);
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+
+    /* ── Seção salvar ── */
+    .save-section {
+      width: 100%;
+      border-top: 1px solid var(--border);
+      padding-top: clamp(.6rem, 1.2vh, 1rem);
+    }
+    .save-section h3 {
+      font-family: var(--font-head);
+      font-size: clamp(.7rem, 1vw, .9rem);
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: clamp(.4rem, .8vh, .7rem);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    /* Display do nick */
+    .vdisplay {
+      background: #080f1e;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: clamp(.5rem, 1vh, .8rem) clamp(.7rem, 1.5vw, 1rem);
+      margin-bottom: clamp(.4rem, .8vh, .6rem);
+    }
+    .vdisplay-label {
+      font-size: clamp(.6rem, .9vw, .75rem);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: .2rem;
+    }
+    .vdisplay-value {
+      font-family: var(--font-head);
+      font-size: clamp(1rem, 2vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text);
+      min-height: 1.8rem;
+      display: flex; align-items: center; gap: 2px;
+      letter-spacing: .5px;
+    }
+    .vdisplay-value.empty { color: #334155; }
+    .vcursor { color: var(--accent); animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ════════════════════════════════
+       TECLADO VIRTUAL — grande e responsivo
+       Teclas em clamp para crescer com a tela
+    ════════════════════════════════ */
+    .vkb {
+      background: #05090f;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: clamp(.4rem, .8vh, .7rem) clamp(.3rem, .5vw, .5rem);
+      margin-bottom: clamp(.4rem, .8vh, .7rem);
+      width: 100%;
+    }
+    .vkb-hint {
+      text-align: center;
+      font-size: clamp(.55rem, .8vw, .7rem);
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: clamp(.3rem, .5vh, .5rem);
+    }
+    .vkb-row {
+      display: flex;
+      gap: clamp(2px, .3vw, 5px);
+      justify-content: center;
+      margin-bottom: clamp(2px, .3vw, 5px);
+    }
+    .vk {
+      flex: 1;
+      min-width: 0;
+      height: clamp(38px, 5.5vh, 64px);
+      background: var(--surface2);
+      border: 1px solid #334155;
+      border-radius: clamp(6px, .7vw, 10px);
+      color: var(--text);
+      font-family: var(--font-head);
+      font-size: clamp(.8rem, 1.4vw, 1.2rem);
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation;
+      -webkit-user-select: none; user-select: none;
+      transition: background .1s, transform .08s;
+    }
+    .vk:active { background: #334155; transform: scale(.92); }
+    .vk.caps-on { background: #3730a3; border-color: var(--accent); }
+    .vk.del     { background: #7f1d1d; }
+    .vk.space   { background: #0f172a; font-size: clamp(.65rem, 1vw, .9rem); }
+    .vk.num-sm  {
+      height: clamp(30px, 4vh, 50px);
+      font-size: clamp(.7rem, 1.1vw, 1rem);
+    }
+
+    /* Botão salvar */
+    .btn-salvar {
+      width: 100%;
+      padding: clamp(.7rem, 1.5vh, 1.1rem);
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-head);
+      font-size: clamp(.9rem, 1.6vw, 1.3rem);
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: filter .15s;
+    }
+    .btn-salvar:hover { filter: brightness(1.1); }
+  </style>
+</head>
+<body>
+
+  <div class="result-wrap">
+
+    <!-- Coluna imagem -->
+    <div class="col-img">
+      <img src="{{ url_for('static', filename='img/Pablo.png') }}" alt="Desenvolvedor">
+      <p>Desenvolvido por: Pablo Dias</p>
+    </div>
+
+    <!-- Coluna resultado -->
+    <div class="col-result">
+
+      <div class="result-emoji">
+        {% if acertos == total %}🏆
+        {% elif acertos >= total * 0.6 %}🥈
+        {% else %}📚{% endif %}
+      </div>
+
+      <h1 class="result-title">Quiz Finalizado!</h1>
+
+      <div class="result-stats">
+        <div class="stat-box">
+          <div class="stat-val green">{{ acertos }}/{{ total }}</div>
+          <div class="stat-label">Acertos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val blue">{{ pontuacao }}</div>
+          <div class="stat-label">Pontos</div>
+        </div>
+      </div>
+
+      <!-- Salvar -->
+      <div class="save-section">
+        <h3>💾 Salvar no Placar</h3>
+
+        <div class="vdisplay">
+          <div class="vdisplay-label">Seu nick</div>
+          <div class="vdisplay-value empty" id="vvalue">
+            <span id="vtext">toque nas teclas…</span>
+            <span class="vcursor">|</span>
+          </div>
+        </div>
+
+        <!-- Teclado QWERTY responsivo -->
+        <div class="vkb">
+          <div class="vkb-hint">Teclado · toque nas letras</div>
+          <!-- Linha numérica -->
+          <div class="vkb-row">
+            {% for n in ['1','2','3','4','5','6','7','8','9','0'] %}
+              <div class="vk num-sm" onclick="vkPress('{{ n }}')">{{ n }}</div>
+            {% endfor %}
+          </div>
+          <!-- QWERTY -->
+          <div class="vkb-row" id="row0"></div>
+          <div class="vkb-row" id="row1"></div>
+          <div class="vkb-row">
+            <div class="vk caps-btn" id="caps-btn" style="flex:1.9;font-size:clamp(.6rem,.9vw,.85rem)" onclick="toggleCaps()">▲ min</div>
+            <div id="row2" style="display:contents"></div>
+            <div class="vk del" style="flex:1.9" onclick="vkDel()">⌫</div>
+          </div>
+          <!-- Barra espaço -->
+          <div class="vkb-row">
+            <div class="vk" style="flex:1.2" onclick="vkPress('.')">.</div>
+            <div class="vk space" style="flex:5" onclick="vkPress(' ')">espaço</div>
+            <div class="vk" style="flex:1.2" onclick="vkPress('_')">_</div>
+            <div class="vk del" style="flex:1.9" onclick="vkDel()">⌫</div>
+          </div>
+        </div>
+
+        <form id="save-form" action="{{ url_for('salvar_pontuacao') }}" method="post">
+          <input type="hidden" name="nick" id="hidden-nick">
+        </form>
+
+        <button class="btn-salvar" onclick="submitSave()">Salvar e Ver Placar →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const LINHAS = [
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L'],
+      ['Z','X','C','V','B','N','M'],
+    ];
+
+    let nick = '';
+    let caps = false;
+    const MAX = 15;
+
+    function buildAlfa() {
+      ['row0','row1'].forEach((id, i) => {
+        const row = document.getElementById(id);
+        LINHAS[i].forEach(c => {
+          const el = document.createElement('div');
+          el.className = 'vk';
+          el.dataset.char = c;
+          el.textContent = c.toLowerCase();
+          el.onclick = () => vkPress(c);
+          row.appendChild(el);
+        });
+      });
+      const row2 = document.getElementById('row2');
+      LINHAS[2].forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'vk';
+        el.dataset.char = c;
+        el.textContent = c.toLowerCase();
+        el.onclick = () => vkPress(c);
+        row2.appendChild(el);
+      });
+    }
+    buildAlfa();
+
+    function toggleCaps() {
+      caps = !caps;
+      const btn = document.getElementById('caps-btn');
+      btn.textContent = caps ? '▲ MAI' : '▲ min';
+      btn.classList.toggle('caps-on', caps);
+      document.querySelectorAll('.vk[data-char]').forEach(el => {
+        el.textContent = caps ? el.dataset.char : el.dataset.char.toLowerCase();
+      });
+    }
+
+    function render() {
+      const vv = document.getElementById('vvalue');
+      const vt = document.getElementById('vtext');
+      if (nick) { vt.textContent = nick; vv.classList.remove('empty'); }
+      else      { vt.textContent = 'toque nas teclas…'; vv.classList.add('empty'); }
+    }
+
+    function vkPress(c) {
+      if (nick.length >= MAX) return;
+      nick += caps ? c.toUpperCase() : c.toLowerCase();
+      render();
+    }
+    function vkDel() { nick = nick.slice(0, -1); render(); }
+
+    function submitSave() {
+      if (!nick.trim()) { alert('Digite seu nick para salvar!'); return; }
+      document.getElementById('hidden-nick').value = nick.trim();
+      document.getElementById('save-form').submit();
+    }
+  </script>
+</body>
+</html>

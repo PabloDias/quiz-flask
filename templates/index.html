@@ -1,98 +1,348 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Web</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — Pergunta {{ id_pergunta + 1 }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .top-bar {
+      flex-shrink: 0;
+      height: 8px;
+      background: var(--surface2);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #818cf8);
+      border-radius: 0 4px 4px 0;
+      transition: width 1s linear;
+    }
+
+    .question-header {
+      flex-shrink: 0;
+      margin: clamp(.45rem, 1vh, .9rem) clamp(.6rem, 1.5vw, 1.4rem);
+      padding: clamp(.8rem, 1.6vh, 1.35rem) clamp(1rem, 2.2vw, 2rem);
+      border-radius: 14px;
+    }
+
+    .question-header h1 {
+      font-size: clamp(1.35rem, 3vw, 2.6rem);
+      line-height: 1.25;
+    }
+
+    .media-container {
+      flex: 1 1 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 0 clamp(.8rem, 1.5vw, 1.4rem);
+      gap: clamp(.45rem, 1vh, .9rem);
+    }
+
+    .media-container img {
+      width: clamp(260px, 45vw, 760px);
+      max-height: 50vh;
+      object-fit: contain;
+      border-radius: 14px;
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,.5));
+    }
+
+    .timer-wrap {
+      position: relative;
+      width: clamp(76px, 7.5vw, 115px);
+      height: clamp(76px, 7.5vw, 115px);
+      flex-shrink: 0;
+    }
+
+    .timer-wrap svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-track {
+      fill: none;
+      stroke: var(--surface2);
+      stroke-width: 5;
+    }
+
+    .timer-arc {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 188;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke .4s;
+    }
+
+    .timer-num {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: clamp(1.35rem, 2.8vw, 2.3rem);
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .timer-num.urgent {
+      color: var(--red);
+    }
+
+    .options-footer {
+      flex-shrink: 0;
+      padding: clamp(.5rem, 1.2vh, 1rem) clamp(.6rem, 1.6vw, 1.4rem);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(.6rem, 1vw, 1.2rem);
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .option-button {
+      color: #fff;
+      border: none;
+      padding: clamp(.8rem, 1.6vh, 1.3rem) clamp(1rem, 2vw, 1.8rem);
+      font-family: var(--font-body);
+      font-size: clamp(1.05rem, 2vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.25;
+      border-radius: clamp(10px, 1vw, 16px);
+      cursor: pointer;
+      transition: transform .15s, filter .15s, opacity .2s;
+      display: flex;
+      align-items: center;
+      min-height: clamp(82px, 9vh, 135px);
+      touch-action: manipulation;
+      box-shadow: 0 4px 16px rgba(0,0,0,.3);
+      text-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+
+    .option-button:hover:not(:disabled) {
+      filter: brightness(1.12);
+      transform: scale(1.02);
+    }
+
+    .option-button:active:not(:disabled) {
+      transform: scale(.97);
+    }
+
+    .option-button .icon {
+      font-size: clamp(1.1rem, 2vw, 1.8rem);
+      font-weight: 800;
+      margin-right: clamp(.7rem, 1.4vw, 1.4rem);
+      border: 2.5px solid rgba(255,255,255,.45);
+      width: clamp(44px, 5vw, 76px);
+      height: clamp(44px, 5vw, 76px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: clamp(7px, .8vw, 12px);
+      flex-shrink: 0;
+      background: rgba(0,0,0,.15);
+    }
+
+    .option-button .text {
+      flex-grow: 1;
+      text-align: left;
+      font-size: clamp(1.05rem, 2vw, 1.85rem);
+      line-height: 1.25;
+    }
+
+    .option-button:nth-child(1) { background: var(--op-a); }
+    .option-button:nth-child(2) { background: var(--op-b); }
+    .option-button:nth-child(3) { background: var(--op-c); }
+    .option-button:nth-child(4) { background: var(--op-d); }
+
+    @media (max-width: 768px) {
+      .question-header h1 {
+        font-size: clamp(1.15rem, 4.5vw, 1.7rem);
+      }
+
+      .media-container img {
+        width: clamp(220px, 82vw, 520px);
+        max-height: 38vh;
+      }
+
+      .timer-wrap {
+        width: clamp(64px, 16vw, 88px);
+        height: clamp(64px, 16vw, 88px);
+      }
+
+      .timer-num {
+        font-size: clamp(1.2rem, 5vw, 1.7rem);
+      }
+
+      .options-grid {
+        gap: .55rem;
+      }
+
+      .option-button {
+        min-height: clamp(72px, 11vh, 105px);
+        font-size: clamp(.95rem, 4vw, 1.25rem);
+        padding: .75rem .85rem;
+      }
+
+      .option-button .text {
+        font-size: clamp(.95rem, 4vw, 1.25rem);
+      }
+
+      .option-button .icon {
+        width: clamp(38px, 10vw, 52px);
+        height: clamp(38px, 10vw, 52px);
+        font-size: clamp(1rem, 4vw, 1.25rem);
+        margin-right: .65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .option-button {
+        min-height: 64px;
+      }
+
+      .media-container img {
+        max-height: 30vh;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <header class="question-header">
-        <h1>{{ pergunta }}</h1>
-        </header>
 
-    <main class="media-container">
-        {% if modo == 'piscicultura' %}
-                
-                {% if id_pergunta % 2 == 0 %}
-                    <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
-                {% else %}
-                    <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
-                {% endif %}
+  <div class="top-bar">
+    <div class="progress-fill" id="progress-bar" style="width:100%"></div>
+  </div>
 
-            {% else %}
-                {% if id_pergunta % 2 == 0 %}
-                    <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
-                {% else %}
-                    <img src="{{ url_for('static', filename='img/fazenda1.gif') }}" alt="Tempo correndo...">
-                {% endif %}
+  <header class="question-header">
+    <h1>{{ pergunta }}</h1>
+  </header>
 
-            {% endif %}
-    </main>
+  <main class="media-container">
+    {% if modo == 'piscicultura' %}
+      {% if id_pergunta % 2 == 0 %}
+        <img src="{{ url_for('static', filename='img/fish1.gif') }}" alt="Tempo correndo...">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/fish2.gif') }}" alt="Tempo correndo...">
+      {% endif %}
+    {% else %}
+      {% if id_pergunta % 2 == 0 %}
+        <img src="{{ url_for('static', filename='img/fazenda.gif') }}" alt="Tempo correndo...">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/fazenda1.gif') }}" alt="Tempo correndo...">
+      {% endif %}
+    {% endif %}
 
-    <footer class="options-footer">
-        <form id="quiz-form" action="{{ url_for('responder', id_pergunta=id_pergunta) }}" method="post">
-            <input type="hidden" name="tempo_levado" id="tempo-levado-input" value="30">
-            <div class="options-grid">
-                {% for opcao in opcoes %}
-                    <button type="submit" name="opcao" value="{{ opcao.texto }}" class="option-button" style="background-color: {{ opcao.cor }};">
-                        <span class="icon">{{ opcao.icone }}</span>
-                        <span class="text">{{ opcao.texto }}</span>
-                    </button>
-                {% endfor %}
-            </div>
-        </form>
-    </footer>
+    <div class="timer-wrap">
+      <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <circle class="timer-track" cx="36" cy="36" r="30"/>
+        <circle class="timer-arc" cx="36" cy="36" r="30" id="timer-arc"/>
+      </svg>
+      <div class="timer-num" id="timer-num">30</div>
+    </div>
+  </main>
 
-    <script>
-        const tempoLevadoInput = document.getElementById('tempo-levado-input');
-        const form = document.getElementById('quiz-form');
-        const tempoTotal = 30;
-        let tempoRestante = tempoTotal;
+  <footer class="options-footer">
+    <form id="quiz-form" action="{{ url_for('responder', id_pergunta=id_pergunta) }}" method="post">
+      <input type="hidden" name="tempo_levado" id="tempo-levado-input" value="30">
 
-        const timerInterval = setInterval(() => {
-            tempoRestante--;
-            if (tempoRestante <= 0) {
-                clearInterval(timerInterval);
-            }
-        }, 1000);
+      <div class="options-grid">
+        {% for opcao in opcoes %}
+          <button type="submit" name="opcao" value="{{ opcao.texto }}"
+                  class="option-button" style="background-color: {{ opcao.cor }};">
+            <span class="icon">{{ opcao.icone }}</span>
+            <span class="text">{{ opcao.texto }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    </form>
+  </footer>
 
-        form.addEventListener('submit', function() {
-            clearInterval(timerInterval);
-            let tempoDecorrido = tempoTotal - tempoRestante;
-            if (tempoDecorrido > tempoTotal) {
-                tempoDecorrido = tempoTotal;
-            }
-            tempoLevadoInput.value = tempoDecorrido;
-        });
-    </script>
+  <script>
+    const TEMPO_TOTAL = 30;
+    let tempoRestante = TEMPO_TOTAL;
 
-    <script>
-        const botoesDeResposta = document.querySelectorAll('.option-button');
+    const arcEl = document.getElementById('timer-arc');
+    const numEl = document.getElementById('timer-num');
+    const barEl = document.getElementById('progress-bar');
+    const formEl = document.getElementById('quiz-form');
+    const inputTempo = document.getElementById('tempo-levado-input');
 
-        document.addEventListener('keydown', function(event) {
-            
-            // Verifica qual tecla foi pressionada usando event.key
-            switch (event.key) {
-                case 'ArrowUp': // Seta para Cima
-                    // Simula um clique no primeiro botão (A)
-                    botoesDeResposta[0].click();
-                    break;
-                case 'ArrowRight': // Seta para Direita
-                    // Simula um clique no segundo botão (B)
-                    botoesDeResposta[1].click();
-                    break;
-                case 'ArrowDown': // Seta para Baixo
-                    // Simula um clique no terceiro botão (C)
-                    botoesDeResposta[2].click();
-                    break;
-                case 'ArrowLeft': // Seta para Esquerda
-                    // Simula um clique no quarto botão (D)
-                    botoesDeResposta[3].click();
-                    break;
-            }
-        });
-    </script>
+    const CIRCUNF = 2 * Math.PI * 30;
 
+    arcEl.style.strokeDasharray = CIRCUNF;
+    arcEl.style.strokeDashoffset = 0;
+
+    function atualizar() {
+      const ratio = tempoRestante / TEMPO_TOTAL;
+
+      arcEl.style.strokeDashoffset = CIRCUNF * (1 - ratio);
+      arcEl.style.stroke = tempoRestante <= 6 ? '#ef4444' : '#6366f1';
+
+      barEl.style.width = (ratio * 100) + '%';
+
+      numEl.textContent = tempoRestante;
+      numEl.classList.toggle('urgent', tempoRestante <= 6);
+    }
+
+    atualizar();
+
+    const intervalo = setInterval(() => {
+      tempoRestante--;
+      atualizar();
+
+      if (tempoRestante <= 0) {
+        clearInterval(intervalo);
+      }
+    }, 1000);
+
+    formEl.addEventListener('submit', function() {
+      clearInterval(intervalo);
+      inputTempo.value = Math.min(TEMPO_TOTAL - tempoRestante, TEMPO_TOTAL);
+    });
+
+    const botoes = document.querySelectorAll('.option-button');
+
+    document.addEventListener('keydown', function(e) {
+      switch (e.key) {
+        case 'ArrowUp':
+          botoes[0]?.click();
+          break;
+        case 'ArrowRight':
+          botoes[1]?.click();
+          break;
+        case 'ArrowDown':
+          botoes[2]?.click();
+          break;
+        case 'ArrowLeft':
+          botoes[3]?.click();
+          break;
+      }
+    });
+  </script>
 </body>
 </html>

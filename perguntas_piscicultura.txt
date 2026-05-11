@@ -1,141 +1,246 @@
 ---
 Qual desses é um peixe muito cultivado no Maranhão?
-explicacao: A tambatinga é uma das espécies mais cultivadas no estado por sua adaptação e rápido crescimento.
+explicacao: A tambatinga é um híbrido de tambaqui com pirapitinga, uma das espécies mais cultivadas no estado por sua boa adaptação ao clima e rápido crescimento.
 *Tambatinga.
 Tilápia.
 Salmão.
 Dourado.
 ---
-No cultivo de camarões, qual é a cor mais comum da espécie Litopenaeus vannamei?
-explicacao: O camarão Litopenaeus vannamei é conhecido como camarão-cinza, de coloração cinza-clara.
-*Cinza.
-Azul.
-Amarela.
-Vermelha.
+Qual o peixe nativo da Amazônia mais cultivado no Maranhão?
+explicacao: O tambaqui (Colossoma macropomum) é uma espécie nativa de grande porte, muito cultivada em viveiros escavados e tanques-rede no estado.
+*Tambaqui.
+Bacalhau.
+Salmão.
+Robalo.
 ---
-Qual é o principal  benefício do uso de aeradores nos viveiros de peixes?
-explicacao: Os aeradores aumentam o oxigênio dissolvido, essencial para a sobrevivência dos peixes.
+Qual o principal lago/reservatório do Maranhão com grande potencial para piscicultura em tanques-rede?
+explicacao: O lago da hidrelétrica de Boa Esperança, na divisa entre Maranhão e Piauí, é um dos maiores potenciais para piscicultura em tanques-rede do Nordeste.
+*Lago de Boa Esperança.
+Lago dos Lençóis Maranhenses.
+Lagoa da Jansen, em São Luís.
+Açude do Itapecuru.
+---
+No cultivo do camarão Litopenaeus vannamei, qual é sua coloração característica?
+explicacao: O Litopenaeus vannamei é conhecido como camarão-branco-do-pacífico ou camarão-cinza, de coloração cinza-clara translúcida.
+*Cinza.
+Azul-marinho.
+Amarelo-ouro.
+Vermelho-vivo.
+---
+Qual é o principal benefício do uso de aeradores nos viveiros de peixes?
+explicacao: Os aeradores aumentam o oxigênio dissolvido na água, essencial para a respiração e sobrevivência dos peixes, especialmente em sistemas intensivos.
 *Aumentar o oxigênio dissolvido.
 Diminuir a temperatura da água.
 Reduzir a profundidade.
-Aumentar a salanidade.
+Aumentar a salinidade.
 ---
 Em um viveiro escavado, por que é importante manter as margens com inclinação suave?
-explicacao: A inclinação suave ajuda no manejo e previne o desmoronamento das margens.
-*Facilita o acesso e reduz erosão.
-Aumenta a profundidade.
+explicacao: A inclinação suave (taludes 1:2 ou 1:3) facilita o manejo, previne erosão e desmoronamento, e melhora a estabilidade das margens.
+*Facilita o acesso e reduz a erosão.
+Aumenta automaticamente a profundidade.
 Melhora a cor da água.
 Diminui a evaporação.
 ---
-Qual destes não é um peixe de água doce?
-explicacao: A pescada vive em águas salgadas, não em água doce.
-*Pescada.
+Qual destes NÃO é um peixe de água doce?
+explicacao: A pescada-amarela vive em águas salgadas e estuarinas, sendo importante na pesca marinha do Maranhão, não na piscicultura de água doce.
+*Pescada-amarela.
 Tambaqui.
 Pacu.
 Tilápia.
 ---
 Qual destes é um parâmetro importante na qualidade da água para peixes?
-explicacao: O oxigênio dissolvido é essencial para a respiração dos peixes.
+explicacao: O oxigênio dissolvido é essencial para a respiração dos peixes e indicador-chave do equilíbrio do viveiro.
 *Oxigênio dissolvido.
 Cor da balança.
 Tipo de isca.
 Cor da ração.
 ---
-Qual alimento é tecnicamente recomendado como ração inicial para os alevinos ou larvas de peixe?
-explicacao: A ração farelada é recomendada considerando sua granlumetria minúscula, facilitando a alimentação dos alevinos ou larvas. 
+Qual alimento é tecnicamente recomendado como ração inicial para alevinos ou larvas de peixe?
+explicacao: A ração farelada possui granulometria minúscula, adequada ao tamanho da boca dos alevinos e larvas, facilitando o consumo.
 *Ração farelada.
-Artemia.
-Milho triturado.
-Restos de vegetais.
+Milho triturado inteiro.
+Pedaços grandes de tilápia.
+Restos de vegetais não processados.
 ---
-Em psicultura, a sigla 'FCR' significa?
-explicacao: O FCR indica quanto de ração é necessário para produzir 1 kg de peixe.
-*Fator de Conversão de Ração.
-Frequência de Crescimento Rápido.
+Em piscicultura, a sigla FCA (ou FCR em inglês) significa:
+explicacao: A FCA – Fator de Conversão Alimentar – indica quantos quilos de ração são necessários para produzir 1 kg de peixe, sendo um indicador-chave de eficiência produtiva.
+*Fator de Conversão Alimentar.
+Frequência de Crescimento Acelerado.
 Ficha de Controle de Reprodução.
-Fonte de Cloro Residual.
+Fonte de Cloro Residual Ativo.
 ---
-Qual é a profundidade média de um viveiro escavado para peixes?
-explicacao: Essa profundidade mantém a temperatura estável e facilita o manejo.
+Qual a profundidade média recomendada para um viveiro escavado para peixes?
+explicacao: A faixa de 1,2 a 1,5 m mantém a temperatura estável, facilita o manejo, despesca e o controle dos parâmetros da água.
 *1,2 a 1,5 m.
-0,5 m.
-3 m.
-5 m.
+0,3 a 0,5 m.
+3 a 4 m.
+5 a 8 m.
 ---
-Qual equipamento ajuda a remover partículas em suspensão na água?
-explicacao: O decantador permite que partículas sólidas se depositem, melhorando a qualidade da água.
+Qual equipamento ajuda a remover partículas em suspensão na água do viveiro?
+explicacao: O decantador permite que partículas sólidas se sedimentem por gravidade, melhorando a qualidade da água que retorna ao sistema.
 *Decantador.
-Aerador.
+Aerador de pás.
 Tanque-rede.
-Oxigenador.
+Comedouro automático.
 ---
-No cultivo de camarões, qual a função da calagem?
-explicacao: A calagem ajusta o pH e melhora as condições para cultivo.
+No cultivo de peixes e camarões, qual a função da calagem?
+explicacao: A calagem com calcário ou cal hidratada corrige a acidez do solo e da água, esteriliza o fundo do viveiro e disponibiliza nutrientes.
 *Corrigir a acidez do solo e da água.
-Aumentar a salinidade.
-Aumentar a profundidade.
-Reduzir a temperatura.
+Aumentar a salinidade da água.
+Aumentar a profundidade do viveiro.
+Reduzir a temperatura ambiente.
 ---
 A troca parcial de água em viveiros ajuda a:
-explicacao: A troca parcial remove resíduos e mantém parâmetros adequados.
+explicacao: A renovação parcial remove resíduos metabólicos, mantém parâmetros adequados e reduz o acúmulo de matéria orgânica.
 *Melhorar a qualidade da água.
-Aumentar a temperatura.
-Reduzir a oxigenação.
+Aumentar a temperatura naturalmente.
+Reduzir a oxigenação do meio.
 Dificultar a alimentação.
 ---
-Qual destes é um peixe amazônico cultivado no Maranhão?
-explicacao: O tambaqui é uma espécie nativa da Amazônia e cultivada em várias regiões do Maranhão.
-*Tambaqui.
-Salmão.
-Bacalhau.
-Robalo.
----
-Qual é a principal função do tanque-rede?
-explicacao: Os tanques-rede permitem o cultivo em ambientes naturais, controlando o estoque.
-*Conter peixes em rios ou lagos.
+Qual a principal função do tanque-rede?
+explicacao: Os tanques-rede permitem o cultivo confinado em corpos d'água naturais (lagos, açudes, represas), controlando o estoque e otimizando o uso do espaço.
+*Conter peixes em rios, lagos ou represas.
 Aumentar a temperatura da água.
-Reduzir a turbidez.
-Desinfetar a água.
+Reduzir a turbidez do reservatório.
+Desinfetar a água ao redor.
 ---
-No Maranhão, qual é a temperatura ideal da água para o cultivo de Tambatinga?
-explicacao: A tambatinga apresenta bom crescimento nessa faixa de temperatura.
+No Maranhão, qual a faixa ideal de temperatura da água para o cultivo de tambaqui e tambatinga?
+explicacao: Espécies amazônicas como tambaqui e tambatinga apresentam ótimo crescimento entre 28 e 30°C, condição comum no clima maranhense.
 *28 a 30°C.
 10 a 15°C.
 5 a 10°C.
-35 a 40°C.
+38 a 42°C.
 ---
-Qual é o principal risco de superlotação em viveiros?
-explicacao: A superlotação reduz o oxigênio e aumenta o estresse e as doenças.
-*Baixo oxigênio e mortalidade.
-Aumento da produtividade.
-Redução de doenças.
-Crescimento acelerado.
+Qual é o principal risco da superlotação (alta densidade) em viveiros?
+explicacao: A superlotação reduz o oxigênio dissolvido, aumenta o estresse e a incidência de doenças, podendo causar mortalidade em massa.
+*Queda de oxigênio e mortalidade.
+Aumento natural da produtividade.
+Redução automática de doenças.
+Crescimento acelerado sem manejo.
 ---
-Em aquicultura, a biomassa significa:
-explicacao: A biomassa é usada para calcular a ração e a densidade de cultivo.
-*Peso total dos peixes ou camarões.
-Quantidade total de ração.
-Área do viveiro.
-Volume de água.
+Em aquicultura, o termo biomassa significa:
+explicacao: A biomassa é o peso total dos animais cultivados no viveiro, utilizada para calcular a ração, a densidade e a produtividade do sistema.
+*Peso total dos peixes ou camarões no viveiro.
+Quantidade total de ração armazenada.
+Área superficial do viveiro.
+Volume de água utilizado.
 ---
 A ração extrusada flutua porque:
-explicacao: A extrusão insere ar, fazendo a ração flutuar.
+explicacao: O processo de extrusão expande a ração com ar sob pressão e calor, criando porosidade que reduz a densidade e faz o pellet flutuar.
 *É expandida com ar durante o processamento.
-É mais pesada.
-Contém óleo.
-É prensada.
+É mais pesada que a peletizada comum.
+Contém grande quantidade de óleo.
+É apenas prensada a frio.
 ---
-O monitoramento da qualidade da água deve ser feito:
-explicacao: O monitoramento diário evita problemas e mantém o ambiente saudável.
-*Todos os dias.
+Com que frequência o monitoramento da qualidade da água deve ser feito em uma piscicultura?
+explicacao: O monitoramento diário (idealmente pela manhã, quando o oxigênio está mais baixo) evita problemas e mantém o ambiente saudável.
+*Diariamente.
 Uma vez por mês.
-Somente na colheita.
+Somente na despesca.
 Apenas quando houver mortalidade.
 ---
-Qual é o principal objetivo da despesca?
-explicacao: A despesca é a etapa final do cultivo, retirando os animais para comercialização.
+Qual o principal objetivo da despesca?
+explicacao: A despesca é a etapa final do ciclo produtivo, em que os animais são retirados do viveiro para comercialização ou processamento.
 *Retirar os peixes para venda ou processamento.
-Limpar o viveiro.
-Adubar a água.
-Soltar peixes no rio.
+Limpar definitivamente o viveiro.
+Adubar a água com fertilizantes.
+Soltar peixes nos rios para repovoamento.
+---
+A "Rota do Peixe", debatida no Agrobalsas 2026, busca o quê no Maranhão?
+explicacao: A Rota do Peixe é uma iniciativa para fortalecer toda a cadeia produtiva da piscicultura maranhense, da produção ao consumidor final.
+*Fortalecer a cadeia produtiva da piscicultura no estado.
+Construir uma estrada exclusiva para caminhões de peixe.
+Mapear cardumes selvagens do litoral.
+Distribuir camarões em festas de aniversário.
+---
+O Programa "Mais Pescado" da SAGRIMA tem qual finalidade principal?
+explicacao: O programa distribui pescado a famílias em situação de vulnerabilidade no Maranhão, especialmente em períodos como a Semana Santa.
+*Distribuir pescado a famílias beneficiadas.
+Exportar peixes ornamentais para a Europa.
+Treinar peixes para apresentações culturais.
+Substituir peixes naturais por modelos artificiais.
+---
+Qual o nome técnico da atividade de criação de camarão em cativeiro?
+explicacao: A carcinicultura é a parte da aquicultura voltada para o cultivo de camarões marinhos ou de água doce.
+*Carcinicultura.
+Camaronicultura.
+Lagosticultura.
+Crustaceomania.
+---
+O que é o sistema BFT (Biofloco) na piscicultura?
+explicacao: O sistema de bioflocos cultiva peixes em alta densidade com troca mínima de água, aproveitando microrganismos para reciclar nutrientes e melhorar a qualidade da água.
+*Sistema com pouca troca de água que recicla nutrientes via microrganismos.
+Sistema que dispensa totalmente o uso de ração.
+Tanque que funciona apenas com luz solar e canto de pássaros.
+Sistema em que os peixes geram a própria eletricidade.
+---
+O que faz a vacinação dos peixes em pisciculturas tecnificadas?
+explicacao: A vacinação previne doenças bacterianas e virais, reduz mortalidade e o uso de antibióticos, melhorando a sustentabilidade do cultivo.
+*Previne doenças e reduz o uso de antibióticos.
+Faz os peixes crescerem em uma semana.
+Permite que os peixes nadem mais rápido em provas.
+Garante que o peixe se reproduza a cada dois dias.
+---
+Qual o documento essencial para regularização de uma piscicultura no Maranhão?
+explicacao: A Licença Ambiental, emitida pelo órgão estadual competente (SEMA-MA), e a outorga de uso da água são obrigatórias para operação legal.
+*Licença ambiental e outorga de uso da água.
+Diploma de "Amigo dos Peixes" assinado por um sereia.
+Carteira de motorista categoria D para tanques-rede.
+Passaporte internacional dos peixes cultivados.
+---
+Qual o objetivo da seleção e classificação por tamanho (grading) em piscicultura?
+explicacao: A separação por tamanho evita canibalismo, reduz competição por alimento e uniformiza o lote, melhorando o desempenho zootécnico.
+*Evitar canibalismo e uniformizar o crescimento.
+Decidir qual peixe é o mais bonito.
+Treinar os peixes para corridas em raias.
+Separar os tímidos dos extrovertidos.
+---
+A piscicultura familiar é incentivada no Maranhão principalmente por:
+explicacao: A piscicultura familiar gera renda, segurança alimentar, ocupa mão de obra rural e fortalece comunidades, sendo prioridade em programas como o "Mais Pescado".
+*Gerar renda, segurança alimentar e fixação no campo.
+Substituir todas as outras atividades rurais do estado.
+Garantir que cada casa tenha um aquário decorativo.
+Criar peixes ornamentais para concursos de beleza.
+---
+O que indica um pH de 6,5 a 8,5 em viveiros de piscicultura?
+explicacao: Essa faixa de pH é considerada ideal para a maioria dos peixes tropicais cultivados, garantindo melhor metabolismo e absorção de nutrientes.
+*Faixa adequada para a maioria dos peixes tropicais.
+Que a água está com gosto de limão azedo.
+Que os peixes vão ficar com sotaque do Sul.
+Que o tanque está pronto para virar piscina humana.
+---
+Qual o papel da Embrapa Pesca e Aquicultura no desenvolvimento da piscicultura maranhense?
+explicacao: A Embrapa desenvolve pesquisas em genética, nutrição, sanidade e sistemas de produção adaptados às espécies e condições da região.
+*Pesquisa e desenvolvimento de tecnologias para o setor.
+Vender peixes ornamentais em supermercados.
+Construir aquários decorativos para shoppings.
+Treinar peixes para apresentar previsão do tempo.
+---
+Qual destes é um exemplo de manejo sanitário preventivo em piscicultura?
+explicacao: A quarentena, a higiene de equipamentos, a vacinação e a desinfecção entre ciclos previnem a entrada e disseminação de patógenos no sistema.
+*Quarentena e desinfecção de equipamentos entre lotes.
+Pedir aos peixes que lavem as mãos antes de comer.
+Trocar a cor da água a cada dia da semana.
+Cantar canções de ninar para o cardume à noite.
+---
+O que é a piracema, regulamentada também no Maranhão?
+explicacao: A piracema é o período reprodutivo dos peixes de água doce, em que a pesca é proibida ou restrita para garantir a renovação dos estoques naturais.
+*Período de defeso para reprodução dos peixes nativos.
+Festival de música regional dedicado aos pescadores.
+Concurso de pescaria nas hidrelétricas do estado.
+Estação em que os peixes hibernam no fundo do rio.
+---
+O Seguro Defeso, fiscalizado pelo Governo Federal, beneficia quem no Maranhão?
+explicacao: O benefício é pago a pescadores artesanais devidamente cadastrados no RGP durante o período de defeso, quando a pesca da espécie está proibida.
+*Pescadores artesanais cadastrados no RGP durante o defeso.
+Apenas turistas que pescam nos fins de semana.
+Donos de aquários decorativos em escritórios.
+Vendedores de equipamentos esportivos de pesca.
+---
+A fixação biológica do nitrogênio, pesquisada por Mariângela Hungria, pode contribuir indiretamente para a piscicultura como?
+explicacao: Reduzir o uso de fertilizantes nitrogenados na lavoura diminui a poluição difusa por nitrogênio nos corpos d'água, beneficiando a piscicultura à jusante.
+*Reduzindo poluição por nitrogênio nos corpos d'água.
+Fazendo os peixes crescerem com fertilizantes diretamente.
+Aumentando o sabor da ração com adubos químicos.
+Trocando peixes por leguminosas nos viveiros.
 ---

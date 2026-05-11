@@ -1,88 +1,202 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placar de Recordes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        /* ALTERAÇÃO: Estilo para o container principal */
-        .placar-container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        /* ALTERAÇÃO: Cor escura para o título */
-        .placar-container h1 { font-size: 3rem; margin-bottom: 2rem; color: #333; }
-    
-        .placar-list { list-style: none; padding: 0; max-width: 500px; margin: 2rem auto; }
-        .placar-list li {
-            /* Fundo da linha agora é um cinza bem claro */
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            /* ALTERAÇÃO: Cor escura para o texto da lista */
-            color: #333;
-        }
-    
-        .play-again-btn { background-color: #3498db; color: white; padding: 1rem 2rem; text-decoration: none; font-size: 1.5rem; font-weight: bold; border-radius: 8px; transition: background-color 0.2s; }
-        .play-again-btn:hover { background-color: #2980b9; }
-    
-        /* A linha destacada já tem um bom contraste, então não mudamos */
-        .placar-list li.highlight {
-            background-color: #f1c40f;
-            color: #2c3e50;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placar — Quiz SAGRIMA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { height: 100%; }
+    body {
+      justify-content: center;
+      align-items: center;
+      padding: clamp(1rem, 3vh, 2rem);
+      overflow: auto;
+    }
+
+    /* ── Card principal — ocupa boa parte da tela ── */
+    .placar-card {
+      background: rgba(15,23,42,.97);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      width: min(96vw, 820px);        /* largura generosa */
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(.6rem, 1.2vh, 1rem);
+    }
+
+    /* Título */
+    .placar-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.6rem, 3.5vw, 3rem);
+      font-weight: 800;
+      color: var(--yellow);
+      text-align: center;
+    }
+    .placar-modo {
+      text-align: center;
+      font-size: clamp(.75rem, 1.2vw, 1rem);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    /* Lista */
+    .placar-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(.4rem, .8vh, .7rem);
+      overflow-y: auto;
+      flex: 1;
+      padding-right: .3rem;
+    }
+    .placar-list::-webkit-scrollbar { width: 5px; }
+    .placar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .placar-item {
+      display: flex;
+      align-items: center;
+      gap: clamp(.6rem, 1.2vw, 1.2rem);
+      padding: clamp(.8rem, 1.8vh, 1.3rem) clamp(.9rem, 2vw, 1.6rem);
+      border-radius: clamp(10px, 1.2vw, 16px);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      transition: border-color .2s, transform .15s;
+    }
+    .placar-item:hover { border-color: var(--accent); transform: translateX(3px); }
+
+    /* Destaque */
+    .placar-item.highlight {
+      background: rgba(241,196,15,.1);
+      border-color: var(--yellow);
+      box-shadow: 0 0 24px rgba(241,196,15,.18);
+      animation: pulse 1.8s ease infinite alternate;
+    }
+    @keyframes pulse {
+      from { box-shadow: 0 0 10px rgba(241,196,15,.1); }
+      to   { box-shadow: 0 0 28px rgba(241,196,15,.32); }
+    }
+
+    .rank {
+      font-family: var(--font-head);
+      font-size: clamp(1.1rem, 2vw, 1.8rem);
+      font-weight: 800;
+      min-width: clamp(36px, 4vw, 56px);
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .rank-2 { color: #94a3b8; }
+    .rank-3 { color: #cd7f32; }
+
+    .nick {
+      flex: 1;
+      font-weight: 700;
+      font-size: clamp(.95rem, 1.8vw, 1.6rem);
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pontos {
+      font-family: var(--font-head);
+      font-size: clamp(1rem, 2vw, 1.8rem);
+      font-weight: 800;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+    .placar-item.highlight .pontos { color: var(--yellow); }
+
+    /* Vazio */
+    .placar-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 3rem;
+      font-size: clamp(.9rem, 1.5vw, 1.2rem);
+    }
+
+    /* Botão */
+    .btn-jogar {
+      display: block;
+      width: 100%;
+      padding: clamp(.9rem, 1.8vh, 1.3rem);
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-head);
+      font-size: clamp(.95rem, 1.8vw, 1.4rem);
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: filter .15s, transform .1s;
+      flex-shrink: 0;
+    }
+    .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.01); }
+  </style>
 </head>
 <body>
-    <div class="container placar-container">
-        <h1>🏆 Placar de Recordes 🏆</h1>
-        <a href="{{ url_for('home') }}" class="play-again-btn">Jogar Novamente</a>
-        
-        {# 1. Inicializamos uma 'flag' para controlar o destaque. Usamos uma lista para que ela possa ser alterada dentro do loop. #}
-        {% set highlight_done = [false] %}
-        
-        <ol class="placar-list">
-            {% for entrada in placar %}
-                {# 2. Verificamos se a entrada atual combina com o nick E os pontos recentes #}
-                {% set is_match = nick_recente and pontos_recentes != -1 and entrada.nick == nick_recente and entrada.pontos == pontos_recentes %}
 
-                {# 3. A classe 'highlight' só é adicionada se for a combinação correta E a nossa flag ainda não foi usada #}
-                <li class="{% if is_match and not highlight_done[0] %}highlight{% endif %}">
-                    <span class="rank">{{ loop.index }}.</span>
-                    <span class="nick">{{ entrada.nick }}</span>
-                    <span class="pontos">{{ entrada.pontos }} Pontos</span>
-                </li>
+  <div class="placar-card">
+    <h1 class="placar-title">🏆 Placar de Recordes</h1>
+    <p class="placar-modo">
+      {% if modo == 'classico' %}⚡ Modo Clássico
+      {% elif modo == 'aprendizagem' %}🌱 Modo Aprendizagem
+      {% elif modo == 'piscicultura' %}🐟 Modo Piscicultura
+      {% else %}{{ modo }}{% endif %}
+    </p>
 
-                {# 4. Se destacamos uma linha, ativamos a flag para não destacarmos mais nenhuma #}
-                {% if is_match and not highlight_done[0] %}
-                    {% if highlight_done.pop() and highlight_done.append(true) %}{% endif %}
-                {% endif %}
+    {% set highlight_done = [false] %}
 
-            {% else %}
-                <li>Ninguém marcou pontos ainda!</li>
-            {% endfor %}
-        </ol>
+    {% if placar %}
+    <ol class="placar-list" id="placar-list">
+      {% for entrada in placar %}
+        {% set is_match = nick_recente and pontos_recentes != -1
+                          and entrada.nick == nick_recente
+                          and entrada.pontos == pontos_recentes %}
+        {% set hl = is_match and not highlight_done[0] %}
+
+        <li class="placar-item {% if hl %}highlight{% endif %}"
+            data-highlight="{{ 'true' if hl else 'false' }}">
+
+          <span class="rank
+            {% if loop.index == 2 %}rank-2
+            {% elif loop.index == 3 %}rank-3{% endif %}">
+            {% if loop.index == 1 %}🥇
+            {% elif loop.index == 2 %}🥈
+            {% elif loop.index == 3 %}🥉
+            {% else %}{{ loop.index }}º{% endif %}
+          </span>
+
+          <span class="nick">{{ entrada.nick }}</span>
+          <span class="pontos">{{ entrada.pontos }} pts</span>
+        </li>
+
+        {% if hl %}
+          {% if highlight_done.pop() and highlight_done.append(true) %}{% endif %}
+        {% endif %}
+      {% endfor %}
+    </ol>
+    {% else %}
+    <div class="placar-empty">
+      <p>Ninguém marcou pontos ainda.<br>Seja o primeiro! 🎯</p>
     </div>
+    {% endif %}
 
-    <script>
-        // O script de rolagem continua o mesmo e vai funcionar perfeitamente!
-        document.addEventListener('DOMContentLoaded', function() {
-            const highlightedRow = document.querySelector('.highlight');
-            if (highlightedRow) {
-                highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-    </script>
+    <a href="{{ url_for('home') }}" class="btn-jogar">🔄 Jogar Novamente</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const hl = document.querySelector('.highlight');
+      if (hl) hl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
 </body>
 </html>
