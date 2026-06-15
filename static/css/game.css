@@ -1,0 +1,70 @@
+/* ── Aventura Quiz 2D ───────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1b2330;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #eef2f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#game-shell { width: min(100vw, 1100px); padding: 8px; }
+
+#game-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px; gap: 8px;
+}
+.game-title { font-weight: 700; letter-spacing: .4px; font-size: 15px; }
+.game-back {
+  color: #9fc1ff; text-decoration: none; font-size: 14px;
+  padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.06);
+}
+.game-back:hover { background: rgba(255,255,255,.14); }
+
+#game-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  background: #6db3e8;
+}
+#game-container canvas { display: block; width: 100% !important; height: 100% !important; image-rendering: pixelated; }
+
+/* ── overlay de nickname / ranking ── */
+#nick-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(10, 14, 22, .72);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+#nick-overlay.hidden { display: none; }
+.nick-card {
+  background: #232c3d; border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px; padding: 28px 26px; width: min(92vw, 380px);
+  text-align: center; box-shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+.nick-card h2 { margin-bottom: 6px; }
+.nick-card p  { color: #ffd76a; font-weight: 700; margin-bottom: 16px; font-size: 18px; }
+#nick-input {
+  width: 100%; padding: 12px 14px; border-radius: 10px; border: none;
+  font-size: 16px; margin-bottom: 14px; background: #141a26; color: #fff;
+  outline: 2px solid transparent;
+}
+#nick-input:focus { outline-color: #5a8dee; }
+.nick-actions { display: flex; gap: 10px; }
+.nick-actions button {
+  flex: 1; padding: 12px; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  background: #2e9e5b; color: #fff;
+}
+.nick-actions button.ghost { background: rgba(255,255,255,.1); }
+.nick-actions button:hover { filter: brightness(1.12); }
+
+@media (max-width: 640px) {
+  .game-title { font-size: 12px; }
+  #game-container { aspect-ratio: 4 / 3; }
+}

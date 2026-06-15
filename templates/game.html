@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Aventura Quiz 2D · SAGRIMA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+</head>
+<body>
+  <div id="game-shell">
+    <div id="game-topbar">
+      <a href="{{ url_for('home') }}" class="game-back">← Menu</a>
+      <span class="game-title">🎮 Aventura Quiz 2D — modo {{ modo }}</span>
+      <a href="{{ url_for('exibir_placar', modo='game_' + modo) }}" class="game-back">🏆 Ranking</a>
+    </div>
+    <div id="game-container"></div>
+  </div>
+
+  <!-- Overlay para salvar pontuação no ranking (mostrado pela ResultScene) -->
+  <div id="nick-overlay" class="hidden">
+    <div class="nick-card">
+      <h2 id="nick-headline">Fim de jogo!</h2>
+      <p id="nick-score"></p>
+      <input id="nick-input" type="text" maxlength="20" placeholder="Seu nome / apelido">
+      <div class="nick-actions">
+        <button id="nick-save">💾 Salvar no Ranking</button>
+        <button id="nick-skip" class="ghost">Pular</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dados injetados pelo Flask para o jogo
+    window.GAME_BOOT = {
+      modo: "{{ modo }}",
+      dificuldade: "{{ dificuldade }}",
+      urls: {
+        questions: "{{ url_for('game_questions') }}",
+        answer:    "{{ url_for('game_answer') }}",
+        finish:    "{{ url_for('game_finish') }}",
+        home:      "{{ url_for('home') }}",
+        game:      "{{ url_for('game') }}",
+        static:    "{{ url_for('static', filename='') }}"
+      }
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/vendor/phaser.min.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/game/main.js') }}"></script>
+</body>
+</html>

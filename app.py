@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_session import Session
 import random
 import json
@@ -306,3 +306,176 @@ def limpar_placar():
         except FileNotFoundError:
             print(f"Placar '{nome_arquivo}' não encontrado, nada a limpar.")
     return redirect(url_for('configuracao'))
+
+# ══════════════════════════════════════════════════════════════
+#  MODO AVENTURA QUIZ 2D  (jogo de plataforma side-scrolling)
+#  Tudo abaixo desta linha é NOVO. Nada acima foi alterado
+#  (apenas o import de `jsonify` na primeira linha).
+# ══════════════════════════════════════════════════════════════
+
+# Configuração do jogo — ajuste livremente.
+# Os valores de "normal" são a base; "facil"/"dificil" sobrescrevem campos.
+GAME_CONFIG = {
+    "normal": {
+        "correct_points":       100,   # pontos por acerto
+        "fast_bonus":           50,    # bônus se responder em < fast_threshold
+        "fast_threshold":       7,     # segundos para valer o bônus
+        "wrong_penalty":        25,    # pontos perdidos por erro
+        "level_complete_bonus": 500,   # bônus ao concluir a fase
+        "life_bonus":           100,   # bônus por vida restante na vitória
+        "lives":                3,     # vidas iniciais
+        "threat_speed":         1.0,   # multiplicador de velocidade da ameaça
+        "answer_time_limit":    15,    # segundos até a ameaça alcançar (visual)
+        "questions_per_level":  None,  # None = usa 'perguntas_por_partida' do config.json
+    },
+    "facil":   {"lives": 5, "threat_speed": 0.6, "answer_time_limit": 25, "wrong_penalty": 0},
+    "dificil": {"lives": 2, "threat_speed": 1.5, "answer_time_limit": 10, "wrong_penalty": 50},
+}
+
+GAME_QUIZ_FILES = {           # reusa os mesmos arquivos .txt do quiz clássico
+    'classico':     'perguntas.txt',
+    'aprendizagem': 'perguntas_infantil.txt',
+    'piscicultura': 'perguntas_piscicultura.txt',
+}
+
+def _game_config(dificuldade):
+    cfg = dict(GAME_CONFIG['normal'])
+    cfg.update(GAME_CONFIG.get(dificuldade, {}))
+    return cfg
+
+def _modos_permitidos():
+    nivel = session.get('access_level')
+    if nivel == 'todos':
+        return ['classico', 'aprendizagem', 'piscicultura']
+    if nivel == 'misto':
+        return ['classico', 'aprendizagem']
+    if nivel == 'piscicultura':
+        return ['piscicultura']
+    return []
+
+@app.route('/game')
+def game():
+    """Página do jogo de plataforma 2D (Phaser)."""
+    permitidos = _modos_permitidos()
+    if not permitidos:
+        return redirect(url_for('home'))
+    modo = request.args.get('modo', permitidos[0])
+    if modo not in permitidos:
+        modo = permitidos[0]
+    dificuldade = request.args.get('dificuldade', 'normal')
+    if dificuldade not in GAME_CONFIG:
+        dificuldade = 'normal'
+    return render_template('game.html', modo=modo, dificuldade=dificuldade,
+                           modos_permitidos=permitidos)
+
+@app.route('/api/game/questions')
+def game_questions():
+    """Sorteia perguntas e devolve JSON SEM o gabarito (validação no servidor)."""
+    permitidos = _modos_permitidos()
+    if not permitidos:
+        return jsonify({'error': 'acesso negado'}), 403
+    modo = request.args.get('modo', permitidos[0])
+    if modo not in permitidos:
+        return jsonify({'error': 'modo nao permitido'}), 403
+    dificuldade = request.args.get('dificuldade', 'normal')
+    if dificuldade not in GAME_CONFIG:
+        dificuldade = 'normal'
+    cfg = _game_config(dificuldade)
+
+    perguntas = carregar_perguntas(GAME_QUIZ_FILES.get(modo, 'perguntas.txt'))
+    if not perguntas:
+        return jsonify({'error': 'sem perguntas'}), 404
+
+    n = cfg['questions_per_level'] or carregar_config().get('perguntas_por_partida', 5)
+    n = min(n, len(perguntas))
+    sorteadas = random.sample(perguntas, n)
+
+    letras = ['A', 'B', 'C', 'D', 'E', 'F']
+    rodada, publicas = [], []
+    for i, q in enumerate(sorteadas):
+        opcoes = list(q['opcoes'])
+        random.shuffle(opcoes)
+        correta = letras[opcoes.index(q['resposta'])]
+        rodada.append({'correta': correta,
+                       'explicacao': q.get('explicacao'),
+                       'respondida': False})
+        publicas.append({
+            'id': i,
+            'question': q['pergunta'],
+            'options': [{'id': letras[j], 'text': t} for j, t in enumerate(opcoes)],
+            'theme': modo,
+            'difficulty': dificuldade,
+        })
+
+    session['game_round']  = rodada
+    session['game_score']  = 0
+    session['game_hits']   = 0
+    session['game_modo']   = modo
+    session['game_dif']    = dificuldade
+    return jsonify({'questions': publicas, 'config': cfg, 'modo': modo})
+
+@app.route('/api/game/answer', methods=['POST'])
+def game_answer():
+    """Valida uma resposta no servidor e devolve gabarito + pontos."""
+    data   = request.get_json(silent=True) or {}
+    idx    = data.get('question_index')
+    opcao  = data.get('option_id')
+    tempo  = float(data.get('time_taken', 999))
+    rodada = session.get('game_round', [])
+    if idx is None or not isinstance(idx, int) or idx < 0 or idx >= len(rodada):
+        return jsonify({'error': 'pergunta invalida'}), 400
+    item = rodada[idx]
+    if item['respondida']:
+        return jsonify({'error': 'pergunta ja respondida'}), 400
+
+    cfg     = _game_config(session.get('game_dif', 'normal'))
+    correto = (opcao == item['correta'])
+    pontos  = 0
+    if correto:
+        pontos = cfg['correct_points']
+        if tempo < cfg['fast_threshold']:
+            pontos += cfg['fast_bonus']
+        session['game_hits'] = session.get('game_hits', 0) + 1
+    else:
+        pontos = -cfg['wrong_penalty']
+
+    item['respondida'] = True
+    session['game_round'] = rodada
+    session['game_score'] = max(0, session.get('game_score', 0) + pontos)
+
+    return jsonify({
+        'correct':        correto,
+        'correct_option': item['correta'],
+        'explanation':    item['explicacao'],
+        'points_awarded': pontos,
+        'total_score':    session['game_score'],
+        'fast':           correto and tempo < cfg['fast_threshold'],
+    })
+
+@app.route('/api/game/finish', methods=['POST'])
+def game_finish():
+    """Fecha a partida, aplica bônus de vitória e salva no ranking."""
+    data     = request.get_json(silent=True) or {}
+    vitoria  = bool(data.get('victory'))
+    vidas    = int(data.get('lives_left', 0))
+    nick     = str(data.get('nick', '')).strip()[:20]
+    modo     = session.get('game_modo', 'classico')
+    cfg      = _game_config(session.get('game_dif', 'normal'))
+
+    pontos = session.get('game_score', 0)
+    if vitoria:
+        pontos += cfg['level_complete_bonus'] + max(0, vidas) * cfg['life_bonus']
+    session['game_score'] = pontos
+
+    salvo = False
+    if nick:
+        modo_placar = f'game_{modo}'           # reusa carregar/salvar_placar
+        placar = carregar_placar(modo_placar)
+        placar.append({'nick': nick, 'pontos': pontos})
+        salvar_placar(placar, modo_placar)
+        salvo = True
+
+    return jsonify({'final_score': pontos,
+                    'hits': session.get('game_hits', 0),
+                    'saved': salvo,
+                    'ranking_url': url_for('exibir_placar', modo=f'game_{modo}')})
