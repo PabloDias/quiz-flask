@@ -1,0 +1,626 @@
+{
+  "versao": "expocodo-2026",
+  "tema": "A Forca Jovem no Agro",
+  "indicadores_iniciais": {
+    "producao": 50,
+    "custos": 40,
+    "agua": 65,
+    "sustentabilidade": 55,
+    "renda": 50
+  },
+  "config": {
+    "min": 0,
+    "max": 100,
+    "total_decisoes": 12,
+    "eventos_por_partida": 3,
+    "nota": "Score final = producao + (100 - custos) + agua + sustentabilidade + renda. Custos invertido: quanto menor, melhor."
+  },
+
+  "culturas": [
+    {
+      "id": "mandioca",
+      "nome": "Mandioca",
+      "perfil": "Rustica e resiliente. Aguenta a seca, mas da retorno menor e mais lento.",
+      "icone": "mandioca",
+      "pesos": {
+        "seca_resiliencia": 0.5,
+        "renda_venda": 0.8,
+        "sede_agua": 0.7,
+        "pressao_ambiental": 0.8
+      }
+    },
+    {
+      "id": "hortalicas",
+      "nome": "Hortalicas",
+      "perfil": "Intensiva e lucrativa. Da bom dinheiro, mas tem sede de agua e insumo.",
+      "icone": "hortalica",
+      "pesos": {
+        "seca_resiliencia": 1.4,
+        "renda_venda": 1.3,
+        "sede_agua": 1.4,
+        "pressao_ambiental": 1.0
+      }
+    },
+    {
+      "id": "soja",
+      "nome": "Soja",
+      "perfil": "Comercial e de escala. Otimo retorno na venda, mas custo e pressao ambiental altos.",
+      "icone": "soja",
+      "pesos": {
+        "seca_resiliencia": 1.1,
+        "renda_venda": 1.3,
+        "sede_agua": 1.0,
+        "pressao_ambiental": 1.4
+      }
+    },
+    {
+      "id": "gado_leiteiro",
+      "nome": "Gado Leiteiro",
+      "perfil": "Renda estavel o ano todo. Sensivel a agua e ao manejo sustentavel.",
+      "icone": "gado",
+      "pesos": {
+        "seca_resiliencia": 1.2,
+        "renda_venda": 0.9,
+        "sede_agua": 1.3,
+        "pressao_ambiental": 1.2
+      }
+    }
+  ],
+
+  "safras": [
+    {
+      "safra": 1,
+      "nome": "Primeira Safra",
+      "preparo": {
+        "id": "s1_preparo",
+        "etapa": "preparo",
+        "titulo": "Preparo do Solo",
+        "contexto": "A propriedade e sua agora. E hora de preparar o primeiro plantio da temporada.",
+        "icone": "solo",
+        "opcoes": [
+          {
+            "id": "s1p_a",
+            "texto": "Analisar o solo antes de plantar",
+            "efeitos": {"producao": 8, "custos": 4, "agua": 5, "sustentabilidade": 10, "renda": 0},
+            "feedback": "Voce conheceu seu solo antes de investir. A SAGRIMA oferece analise de solo pela assistencia tecnica (ATER).",
+            "servico_sagrima": "ATER - Analise de Solo"
+          },
+          {
+            "id": "s1p_b",
+            "texto": "Plantar direto, do jeito que sempre se fez",
+            "efeitos": {"producao": 3, "custos": 0, "agua": 0, "sustentabilidade": -2, "renda": 2},
+            "feedback": "Deu pra plantar, mas sem saber o que o solo precisava, parte do investimento foi no escuro.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s1p_c",
+            "texto": "Preparar com adubacao verde e cobertura",
+            "efeitos": {"producao": 5, "custos": 2, "agua": 8, "sustentabilidade": 12, "renda": 0},
+            "feedback": "A cobertura do solo retem umidade e protege a terra. Praticas conservacionistas rendem a medio prazo.",
+            "servico_sagrima": null
+          }
+        ]
+      },
+      "manejo": {
+        "id": "s1_manejo",
+        "etapa": "manejo",
+        "titulo": "Manejo da Lavoura",
+        "contexto": "A cultura esta crescendo. As decisoes de manejo agora definem a safra.",
+        "icone": "broto",
+        "opcoes": [
+          {
+            "id": "s1m_a",
+            "texto": "Seguir a recomendacao tecnica da ATER",
+            "efeitos": {"producao": 10, "custos": 3, "agua": 5, "sustentabilidade": 8, "renda": 4},
+            "feedback": "Acompanhamento tecnico ajusta a dose certa de agua e insumo. Menos desperdicio, mais resultado.",
+            "servico_sagrima": "ATER - Assistencia Tecnica"
+          },
+          {
+            "id": "s1m_b",
+            "texto": "Aplicar insumo no maximo para garantir",
+            "efeitos": {"producao": 8, "custos": 14, "agua": -3, "sustentabilidade": -10, "renda": -4},
+            "feedback": "Excesso de insumo elevou o custo e pressionou o ambiente sem ganho proporcional de producao.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s1m_c",
+            "texto": "Manejar de forma economica e observar",
+            "efeitos": {"producao": 4, "custos": -4, "agua": 3, "sustentabilidade": 5, "renda": 3},
+            "feedback": "Cautela segurou os custos. Producao modesta, mas margem preservada.",
+            "servico_sagrima": null
+          }
+        ]
+      },
+      "venda": {
+        "id": "s1_venda",
+        "etapa": "venda",
+        "titulo": "Comercializacao da Safra",
+        "contexto": "Chegou a colheita. Como escoar a producao da primeira safra?",
+        "icone": "moeda",
+        "opcoes": [
+          {
+            "id": "s1v_a",
+            "texto": "Vender pelo atravessador na porteira",
+            "efeitos": {"producao": 0, "custos": 0, "agua": 0, "sustentabilidade": 0, "renda": 6, "escala_renda": true},
+            "feedback": "Venda rapida e garantida, mas o atravessador fica com boa parte da margem.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s1v_b",
+            "texto": "Entrar numa cooperativa de produtores",
+            "efeitos": {"producao": 0, "custos": -3, "agua": 0, "sustentabilidade": 4, "renda": 12, "escala_renda": true},
+            "feedback": "A cooperativa deu mais forca de negociacao e melhor preco. A SAGRIMA apoia o cooperativismo rural.",
+            "servico_sagrima": "Apoio ao Cooperativismo"
+          },
+          {
+            "id": "s1v_c",
+            "texto": "Vender direto na feira do produtor",
+            "efeitos": {"producao": 0, "custos": 2, "agua": 0, "sustentabilidade": 3, "renda": 10, "escala_renda": true},
+            "feedback": "Venda direta ao consumidor melhora o preco. Da mais trabalho, mas a renda fica com voce.",
+            "servico_sagrima": "Feira do Produtor"
+          }
+        ]
+      }
+    },
+
+    {
+      "safra": 2,
+      "nome": "Segunda Safra",
+      "preparo": {
+        "id": "s2_preparo",
+        "etapa": "preparo",
+        "titulo": "Investir na Propriedade",
+        "contexto": "Com a primeira safra fechada, e hora de pensar em melhorar a estrutura.",
+        "icone": "estrutura",
+        "opcoes": [
+          {
+            "id": "s2p_a",
+            "texto": "Buscar credito rural para irrigacao",
+            "efeitos": {"producao": 6, "custos": 8, "agua": 15, "sustentabilidade": 2, "renda": -2},
+            "feedback": "Investir em irrigacao segura a producao contra a seca. O credito rural via SAGRIMA tem juros menores que o informal.",
+            "servico_sagrima": "Credito Rural"
+          },
+          {
+            "id": "s2p_b",
+            "texto": "Reinvestir so o proprio caixa, sem credito",
+            "efeitos": {"producao": 3, "custos": -2, "agua": 4, "sustentabilidade": 3, "renda": 2},
+            "feedback": "Crescimento mais lento, porem sem divida. Uma escolha conservadora e segura.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s2p_c",
+            "texto": "Adquirir maquinario usado a prazo",
+            "efeitos": {"producao": 9, "custos": 12, "agua": 0, "sustentabilidade": -3, "renda": -3},
+            "feedback": "Mais capacidade de trabalho, mas a parcela pesa no caixa e a maquina velha gasta mais.",
+            "servico_sagrima": null
+          }
+        ]
+      },
+      "manejo": {
+        "id": "s2_manejo",
+        "etapa": "manejo",
+        "titulo": "Manejo e Recursos",
+        "contexto": "A segunda safra exige atencao ao uso da agua e do solo.",
+        "icone": "agua",
+        "opcoes": [
+          {
+            "id": "s2m_a",
+            "texto": "Instalar sensor de umidade do solo",
+            "efeitos": {"producao": 7, "custos": 5, "agua": 14, "sustentabilidade": 10, "renda": 3, "escala_agua": true},
+            "feedback": "Irrigar so quando o solo precisa economiza agua e energia. Tecnologia a servico do produtor jovem.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s2m_b",
+            "texto": "Irrigar por horario fixo, sem medir",
+            "efeitos": {"producao": 5, "custos": 6, "agua": -12, "sustentabilidade": -6, "renda": -2, "escala_agua": true},
+            "feedback": "Irrigar sem medir gasta agua a toa e encarece a conta de energia.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s2m_c",
+            "texto": "Rotacionar cultura e adubar organicamente",
+            "efeitos": {"producao": 6, "custos": -3, "agua": 6, "sustentabilidade": 14, "renda": 2},
+            "feedback": "Rotacao quebra o ciclo de pragas e recupera o solo. Menos insumo, terra mais viva.",
+            "servico_sagrima": null
+          }
+        ]
+      },
+      "venda": {
+        "id": "s2_venda",
+        "etapa": "venda",
+        "titulo": "Agregar Valor",
+        "contexto": "A segunda colheita esta pronta. Vale processar ou vender in natura?",
+        "icone": "moeda",
+        "opcoes": [
+          {
+            "id": "s2v_a",
+            "texto": "Vender tudo in natura, sem processar",
+            "efeitos": {"producao": 0, "custos": 0, "agua": 0, "sustentabilidade": 0, "renda": 7, "escala_renda": true},
+            "feedback": "Renda imediata e sem trabalho extra, mas voce entrega o valor do beneficiamento pra outro.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s2v_b",
+            "texto": "Beneficiar/processar antes de vender",
+            "efeitos": {"producao": 0, "custos": 5, "agua": 0, "sustentabilidade": 2, "renda": 15, "escala_renda": true},
+            "feedback": "Agregar valor multiplica a renda por quilo. A SAGRIMA apoia agroindustria familiar e boas praticas.",
+            "servico_sagrima": "Apoio a Agroindustria Familiar"
+          },
+          {
+            "id": "s2v_c",
+            "texto": "Guardar parte para vender na entressafra",
+            "efeitos": {"producao": 0, "custos": 3, "agua": 0, "sustentabilidade": 1, "renda": 11, "escala_renda": true},
+            "feedback": "Estocar e vender quando o preco sobe melhora a renda. Exige planejamento e um bom armazem.",
+            "servico_sagrima": null
+          }
+        ]
+      }
+    },
+
+    {
+      "safra": 3,
+      "nome": "Terceira Safra",
+      "preparo": {
+        "id": "s3_preparo",
+        "etapa": "preparo",
+        "titulo": "Regularizacao e Futuro",
+        "contexto": "Sua propriedade cresceu. Para acessar mais mercados e credito, a regularizacao ambiental pesa.",
+        "icone": "documento",
+        "opcoes": [
+          {
+            "id": "s3p_a",
+            "texto": "Regularizar via CAR na SAGRIMA",
+            "efeitos": {"producao": 4, "custos": 2, "agua": 6, "sustentabilidade": 18, "renda": 6},
+            "feedback": "Com o CAR e a regularizacao ambiental, voce abre portas para credito e mercados exigentes. Servico central da SAGRIMA.",
+            "servico_sagrima": "CAR - Regularizacao Ambiental"
+          },
+          {
+            "id": "s3p_b",
+            "texto": "Deixar a regularizacao para depois",
+            "efeitos": {"producao": 3, "custos": 0, "agua": 0, "sustentabilidade": -8, "renda": -2},
+            "feedback": "Sem regularizacao, o acesso a credito e a bons mercados fica travado. Cedo ou tarde cobra o preco.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s3p_c",
+            "texto": "Recuperar area degradada e reservar APP",
+            "efeitos": {"producao": 2, "custos": 4, "agua": 12, "sustentabilidade": 20, "renda": 3},
+            "feedback": "Proteger nascente e mata ciliar garante agua no futuro. Sustentabilidade e producao andam juntas.",
+            "servico_sagrima": "Recuperacao Ambiental"
+          }
+        ]
+      },
+      "manejo": {
+        "id": "s3_manejo",
+        "etapa": "manejo",
+        "titulo": "Consolidar a Producao",
+        "contexto": "Ultima safra do ciclo. Hora de consolidar o que voce construiu.",
+        "icone": "planta",
+        "opcoes": [
+          {
+            "id": "s3m_a",
+            "texto": "Diversificar com um segundo cultivo",
+            "efeitos": {"producao": 9, "custos": 4, "agua": 2, "sustentabilidade": 8, "renda": 6},
+            "feedback": "Diversificar reduz risco: se um cultivo vai mal, o outro segura a renda.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s3m_b",
+            "texto": "Apostar tudo em um unico cultivo de alto valor",
+            "efeitos": {"producao": 12, "custos": 8, "agua": -4, "sustentabilidade": -6, "renda": 8, "escala_renda": true},
+            "feedback": "Aposta alta: renda maior se der certo, mas todo o risco num cultivo so.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s3m_c",
+            "texto": "Capacitar-se em gestao rural",
+            "efeitos": {"producao": 6, "custos": -5, "agua": 4, "sustentabilidade": 6, "renda": 8},
+            "feedback": "Gestao e o que separa quem sobrevive de quem prospera. Conhecimento e o melhor investimento do produtor jovem.",
+            "servico_sagrima": "Capacitacao Rural"
+          }
+        ]
+      },
+      "venda": {
+        "id": "s3_venda",
+        "etapa": "venda",
+        "titulo": "Colheita Final",
+        "contexto": "O ciclo se encerra. Como fechar a ultima venda?",
+        "icone": "moeda",
+        "opcoes": [
+          {
+            "id": "s3v_a",
+            "texto": "Vender para o mercado institucional (PNAE/PAA)",
+            "efeitos": {"producao": 0, "custos": -2, "agua": 0, "sustentabilidade": 5, "renda": 14, "escala_renda": true},
+            "feedback": "Vender para escolas e programas do governo garante preco justo e demanda estavel. A SAGRIMA orienta o acesso.",
+            "servico_sagrima": "Mercado Institucional - PNAE/PAA"
+          },
+          {
+            "id": "s3v_b",
+            "texto": "Vender no mercado local, aos poucos",
+            "efeitos": {"producao": 0, "custos": 1, "agua": 0, "sustentabilidade": 2, "renda": 9, "escala_renda": true},
+            "feedback": "Venda pulverizada no mercado local. Preco razoavel e sem intermediario.",
+            "servico_sagrima": null
+          },
+          {
+            "id": "s3v_c",
+            "texto": "Fechar contrato com uma rede de mercados",
+            "efeitos": {"producao": 0, "custos": 3, "agua": 0, "sustentabilidade": 3, "renda": 13, "escala_renda": true},
+            "feedback": "Contrato traz volume e previsibilidade, mas exige regularizacao e padrao de qualidade.",
+            "servico_sagrima": null
+          }
+        ]
+      }
+    }
+  ],
+
+  "eventos": [
+    {
+      "id": "ev_chuva_forte",
+      "titulo": "Previsao de Chuva Forte",
+      "contexto": "O boletim aponta 80mm nas proximas 48h e voce tem trabalho de campo pendente.",
+      "icone": "chuva",
+      "tag_peso": "pressao_ambiental",
+      "opcoes": [
+        {
+          "id": "ev_chuva_a",
+          "texto": "Consultar o boletim agrometeorologico e reprogramar",
+          "efeitos": {"producao": 8, "custos": -3, "agua": 8, "sustentabilidade": 8, "renda": 4},
+          "feedback": "Voce ajustou o calendario a tempo. A SAGRIMA disponibiliza boletins agrometeorologicos para o planejamento.",
+          "servico_sagrima": "Boletim Agrometeorologico"
+        },
+        {
+          "id": "ev_chuva_b",
+          "texto": "Aplicar insumos agora, antes da chuva",
+          "efeitos": {"producao": -4, "custos": 10, "agua": 0, "sustentabilidade": -12, "renda": -6, "escala_tag": true},
+          "feedback": "A chuva lavou os insumos: dinheiro perdido e risco de contaminar cursos d'agua.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_chuva_c",
+          "texto": "Nao fazer nada e torcer",
+          "efeitos": {"producao": -2, "custos": 0, "agua": 4, "sustentabilidade": 0, "renda": -2},
+          "feedback": "Escapou sem grande dano, mas ficar refem da sorte nao e um plano.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_seca",
+      "titulo": "Estiagem Prolongada",
+      "contexto": "Semanas sem chuva. O reservatorio esta caindo e a lavoura pede agua.",
+      "icone": "sol",
+      "tag_peso": "seca_resiliencia",
+      "opcoes": [
+        {
+          "id": "ev_seca_a",
+          "texto": "Consultar a umidade do solo antes de irrigar",
+          "efeitos": {"producao": 6, "custos": 2, "agua": 6, "sustentabilidade": 8, "renda": 3, "escala_tag": true},
+          "feedback": "Voce irrigou na medida certa, sem desperdicar a agua que restava no reservatorio.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_seca_b",
+          "texto": "Aumentar a irrigacao ao maximo",
+          "efeitos": {"producao": 5, "custos": 8, "agua": -16, "sustentabilidade": -6, "renda": -3, "escala_tag": true},
+          "feedback": "Salvou a safra por ora, mas esvaziou o reservatorio. E se a seca continuar?",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_seca_c",
+          "texto": "Reduzir area e concentrar a agua",
+          "efeitos": {"producao": -2, "custos": -4, "agua": 8, "sustentabilidade": 6, "renda": 1, "escala_tag": true},
+          "feedback": "Perdeu parte da area, mas garantiu o essencial e poupou agua. Decisao dura e sensata.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_praga",
+      "titulo": "Foco de Praga na Lavoura",
+      "contexto": "Voce notou os primeiros sinais de uma praga se espalhando pelo talhao.",
+      "icone": "praga",
+      "tag_peso": "pressao_ambiental",
+      "opcoes": [
+        {
+          "id": "ev_praga_a",
+          "texto": "Chamar a ATER para identificar e recomendar manejo",
+          "efeitos": {"producao": 7, "custos": 2, "agua": 0, "sustentabilidade": 8, "renda": 4},
+          "feedback": "Diagnostico correto evita veneno a toa. Manejo integrado de pragas com apoio tecnico da SAGRIMA.",
+          "servico_sagrima": "ATER - Manejo de Pragas"
+        },
+        {
+          "id": "ev_praga_b",
+          "texto": "Pulverizar veneno forte em tudo",
+          "efeitos": {"producao": 4, "custos": 10, "agua": -2, "sustentabilidade": -14, "renda": -4, "escala_tag": true},
+          "feedback": "Matou a praga e tambem os inimigos naturais dela. Custo alto e solo empobrecido.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_praga_c",
+          "texto": "Ignorar enquanto o prejuizo e pequeno",
+          "efeitos": {"producao": -10, "custos": 2, "agua": 0, "sustentabilidade": -4, "renda": -6},
+          "feedback": "A praga se espalhou e comprometeu boa parte do talhao. Cedo teria sido barato resolver.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_credito",
+      "titulo": "Oportunidade de Credito",
+      "contexto": "Surge a chance de financiar uma melhoria, mas o banco pede documentacao.",
+      "icone": "documento",
+      "tag_peso": "pressao_ambiental",
+      "opcoes": [
+        {
+          "id": "ev_credito_a",
+          "texto": "Procurar a SAGRIMA para regularizar e acessar credito rural",
+          "efeitos": {"producao": 6, "custos": -2, "agua": 4, "sustentabilidade": 12, "renda": 10},
+          "feedback": "Regularizado, voce acessou credito com juros menores. Regularizacao ambiental abre portas.",
+          "servico_sagrima": "Credito Rural + CAR"
+        },
+        {
+          "id": "ev_credito_b",
+          "texto": "Buscar credito informal com juros altos",
+          "efeitos": {"producao": 4, "custos": 14, "agua": 0, "sustentabilidade": -6, "renda": -12},
+          "feedback": "O juro do agiota corroeu a renda. Credito informal e a armadilha mais comum do pequeno produtor.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_credito_c",
+          "texto": "Desistir do investimento por enquanto",
+          "efeitos": {"producao": -4, "custos": 0, "agua": 0, "sustentabilidade": 2, "renda": -2},
+          "feedback": "Sem o investimento, a propriedade ficou parada enquanto os vizinhos avancaram.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_preco_alta",
+      "titulo": "Preco em Alta no Mercado",
+      "contexto": "O preco do seu produto disparou. Todo mundo quer vender ao mesmo tempo.",
+      "icone": "moeda",
+      "tag_peso": "renda_venda",
+      "opcoes": [
+        {
+          "id": "ev_preco_a",
+          "texto": "Vender parte agora e escalonar o resto",
+          "efeitos": {"producao": 0, "custos": 0, "agua": 0, "sustentabilidade": 2, "renda": 12, "escala_tag": true},
+          "feedback": "Aproveitou o pico sem apostar tudo de uma vez. Gestao de venda inteligente.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_preco_b",
+          "texto": "Segurar tudo esperando subir mais",
+          "efeitos": {"producao": 0, "custos": 4, "agua": 0, "sustentabilidade": 0, "renda": -6},
+          "feedback": "O preco caiu antes de voce vender. Ganancia costuma sair caro no mercado agricola.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_preco_c",
+          "texto": "Vender tudo imediatamente",
+          "efeitos": {"producao": 0, "custos": 0, "agua": 0, "sustentabilidade": 0, "renda": 8, "escala_tag": true},
+          "feedback": "Garantiu um bom preco. Poderia ter ganho mais escalonando, mas seguranca tambem tem valor.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_geada",
+      "titulo": "Risco de Geada",
+      "contexto": "A temperatura vai despencar esta noite. A cultura sensivel corre risco.",
+      "icone": "geada",
+      "tag_peso": "seca_resiliencia",
+      "opcoes": [
+        {
+          "id": "ev_geada_a",
+          "texto": "Proteger a lavoura com as tecnicas recomendadas",
+          "efeitos": {"producao": 7, "custos": 5, "agua": 0, "sustentabilidade": 4, "renda": 3, "escala_tag": true},
+          "feedback": "Cobertura e irrigacao preventiva salvaram a lavoura da geada. Informacao a tempo faz a diferenca.",
+          "servico_sagrima": "Boletim Agrometeorologico"
+        },
+        {
+          "id": "ev_geada_b",
+          "texto": "Nao dá tempo, deixar como esta",
+          "efeitos": {"producao": -8, "custos": 0, "agua": 0, "sustentabilidade": 0, "renda": -5, "escala_tag": true},
+          "feedback": "A geada queimou parte da lavoura. Monitorar o clima teria dado tempo de reagir.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_geada_c",
+          "texto": "Colher as pressas o que der",
+          "efeitos": {"producao": -3, "custos": 3, "agua": 0, "sustentabilidade": -2, "renda": 2},
+          "feedback": "Salvou parte colhendo verde, com perda de qualidade. Melhor que perder tudo.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_agua_conflito",
+      "titulo": "Disputa pela Agua",
+      "contexto": "O rio que abastece varias propriedades esta baixo e os vizinhos disputam o uso.",
+      "icone": "agua",
+      "tag_peso": "sede_agua",
+      "opcoes": [
+        {
+          "id": "ev_agua_a",
+          "texto": "Propor um acordo coletivo de uso da agua",
+          "efeitos": {"producao": 5, "custos": -2, "agua": 12, "sustentabilidade": 12, "renda": 3},
+          "feedback": "Gestao compartilhada da agua beneficia todos. A SAGRIMA apoia comites e uso racional dos recursos hidricos.",
+          "servico_sagrima": "Gestao de Recursos Hidricos"
+        },
+        {
+          "id": "ev_agua_b",
+          "texto": "Bombear o maximo antes que acabe",
+          "efeitos": {"producao": 4, "custos": 4, "agua": -14, "sustentabilidade": -12, "renda": -2, "escala_tag": true},
+          "feedback": "Levou vantagem hoje e criou conflito com os vizinhos. E o rio secou mais rapido pra todos.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_agua_c",
+          "texto": "Investir em captacao de agua da chuva",
+          "efeitos": {"producao": 3, "custos": 8, "agua": 14, "sustentabilidade": 10, "renda": -2, "escala_tag": true},
+          "feedback": "Cisterna e captacao reduzem a dependencia do rio. Investimento que se paga na proxima seca.",
+          "servico_sagrima": null
+        }
+      ]
+    },
+    {
+      "id": "ev_tecnologia",
+      "titulo": "Nova Tecnologia Disponivel",
+      "contexto": "Um programa oferece capacitacao em agricultura digital para produtores jovens.",
+      "icone": "tecnologia",
+      "tag_peso": "renda_venda",
+      "opcoes": [
+        {
+          "id": "ev_tec_a",
+          "texto": "Participar da capacitacao e aplicar na propriedade",
+          "efeitos": {"producao": 8, "custos": 2, "agua": 6, "sustentabilidade": 8, "renda": 6},
+          "feedback": "A forca jovem no agro e isso: unir conhecimento tradicional e tecnologia. Capacitacao muda o patamar da propriedade.",
+          "servico_sagrima": "Capacitacao em Agro Digital"
+        },
+        {
+          "id": "ev_tec_b",
+          "texto": "Achar que tecnologia nao e pra pequeno produtor",
+          "efeitos": {"producao": -2, "custos": 0, "agua": -2, "sustentabilidade": -2, "renda": -3},
+          "feedback": "Enquanto isso, produtores da mesma idade que se capacitaram sairam na frente.",
+          "servico_sagrima": null
+        },
+        {
+          "id": "ev_tec_c",
+          "texto": "Comprar equipamento caro sem se capacitar",
+          "efeitos": {"producao": 3, "custos": 12, "agua": 0, "sustentabilidade": 0, "renda": -4},
+          "feedback": "Tecnologia sem conhecimento vira dinheiro parado. O aprendizado precisa vir junto.",
+          "servico_sagrima": null
+        }
+      ]
+    }
+  ],
+
+  "faixas_resultado": [
+    {
+      "min": 420,
+      "titulo": "Produtor Referencia",
+      "mensagem": "Sua propriedade e modelo de gestao sustentavel e rentavel. A forca jovem no agro em acao!",
+      "selo": "ouro"
+    },
+    {
+      "min": 385,
+      "titulo": "Produtor Consolidado",
+      "mensagem": "Boa gestao e producao equilibrada. Sua propriedade tem base solida pra crescer.",
+      "selo": "prata"
+    },
+    {
+      "min": 340,
+      "titulo": "Produtor em Ascensao",
+      "mensagem": "As bases estao postas e o caminho e promissor. A assistencia da SAGRIMA acelera daqui pra frente.",
+      "selo": "bronze"
+    },
+    {
+      "min": 0,
+      "titulo": "Produtor Iniciante",
+      "mensagem": "Todo grande produtor comecou assim. Planejamento e os servicos da SAGRIMA sao o proximo passo.",
+      "selo": "semente"
+    }
+  ]
+}

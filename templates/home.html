@@ -124,6 +124,16 @@
       border-color: rgba(255,255,255,.15);
     }
 
+    .mode-expocodo {
+      background: linear-gradient(135deg, #ca8a04, #854d0e);
+      border-color: rgba(255,255,255,.15);
+    }
+
+    .mode-simulador {
+      background: linear-gradient(135deg, #2d5a3d, #16321f);
+      border-color: rgba(255,255,255,.15);
+    }
+
     .config-link {
       font-size: .85rem;
       color: var(--muted);
@@ -378,6 +388,26 @@
             <div>
               Modo Piscicultura
               <small>Tema Especializado — aquicultura e manejo</small>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if nivel in ('todos', 'misto') %}
+          <a href="{{ url_for('iniciar_jogo', modo_de_jogo='expocodo_jovem') }}" class="mode-btn mode-expocodo">
+            <span class="mode-icon">🚜</span>
+            <div>
+              Agroquiz Jovem EXPOCODÓ
+              <small>52ª EXPOCODÓ 2026 · A Força Jovem no Agro</small>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if nivel in ('todos', 'misto') %}
+          <a href="{{ url_for('simulador_home') }}" class="mode-btn mode-simulador">
+            <span class="mode-icon">🚜</span>
+            <div>
+              Simulador do Produtor
+              <small>52ª EXPOCODÓ 2026 · Administre sua propriedade por 3 safras</small>
             </div>
           </a>
         {% endif %}

@@ -108,8 +108,16 @@
       font-weight: 800;
       color: var(--blue);
       white-space: nowrap;
+      text-align: right;
     }
     .placar-item.highlight .pontos { color: var(--yellow); }
+
+    .pontos small {
+      display: block;
+      font-size: .55em;
+      font-weight: 400;
+      color: var(--muted);
+    }
 
     /* Vazio */
     .placar-empty {
@@ -149,6 +157,7 @@
       {% if modo == 'classico' %}⚡ Modo Clássico
       {% elif modo == 'aprendizagem' %}🌱 Modo Aprendizagem
       {% elif modo == 'piscicultura' %}🐟 Modo Piscicultura
+      {% elif modo == 'expocodo_jovem' %}🚜 Agroquiz Jovem EXPOCODÓ
       {% else %}{{ modo }}{% endif %}
     </p>
 
@@ -175,7 +184,12 @@
           </span>
 
           <span class="nick">{{ entrada.nick }}</span>
-          <span class="pontos">{{ entrada.pontos }} pts</span>
+          <span class="pontos">
+            {{ entrada.pontos }} pts
+            {% if modo == 'expocodo_jovem' and entrada.faixa %}
+              <small>{{ entrada.faixa }}</small>
+            {% endif %}
+          </span>
         </li>
 
         {% if hl %}

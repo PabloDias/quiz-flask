@@ -2,49 +2,101 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Aventura Quiz 2D · SAGRIMA</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agro Quiz Runner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/runner.css') }}">
 </head>
 <body>
-  <div id="game-shell">
-    <div id="game-topbar">
-      <a href="{{ url_for('home') }}" class="game-back">← Menu</a>
-      <span class="game-title">🎮 Aventura Quiz 2D — modo {{ modo }}</span>
-      <a href="{{ url_for('exibir_placar', modo='game_' + modo) }}" class="game-back">🏆 Ranking</a>
-    </div>
-    <div id="game-container"></div>
-  </div>
 
-  <!-- Overlay para salvar pontuação no ranking (mostrado pela ResultScene) -->
-  <div id="nick-overlay" class="hidden">
-    <div class="nick-card">
-      <h2 id="nick-headline">Fim de jogo!</h2>
-      <p id="nick-score"></p>
-      <input id="nick-input" type="text" maxlength="20" placeholder="Seu nome / apelido">
-      <div class="nick-actions">
-        <button id="nick-save">💾 Salvar no Ranking</button>
-        <button id="nick-skip" class="ghost">Pular</button>
-      </div>
+<!-- Container do jogo Phaser — o canvas é inserido aqui pelo Phaser -->
+<div id="game-container"></div>
+
+<!-- Tela de loading (exibida antes do Phaser iniciar) -->
+<div id="loading-screen">
+  <div class="loading-logo">🌾</div>
+  <h1 class="loading-title">Agro Quiz Runner</h1>
+  <div class="loading-bar-wrap"><div id="loading-bar"></div></div>
+  <p id="loading-text">Carregando...</p>
+</div>
+
+<!-- Overlay HTML de perguntas (sobre o canvas) -->
+<div id="question-overlay" class="hidden">
+  <div id="question-panel">
+    <div id="question-timer-bar"><div id="question-timer-fill"></div></div>
+    <p id="question-number">Pergunta 1 / 10</p>
+    <h2 id="question-text">Carregando pergunta...</h2>
+    <div id="answer-buttons">
+      <button class="answer-btn" id="btn-A" data-option="A">
+        <span class="btn-letter btn-a">A</span><span class="btn-text"></span>
+      </button>
+      <button class="answer-btn" id="btn-B" data-option="B">
+        <span class="btn-letter btn-b">B</span><span class="btn-text"></span>
+      </button>
+      <button class="answer-btn" id="btn-C" data-option="C">
+        <span class="btn-letter btn-c">C</span><span class="btn-text"></span>
+      </button>
+      <button class="answer-btn" id="btn-D" data-option="D">
+        <span class="btn-letter btn-d">D</span><span class="btn-text"></span>
+      </button>
+    </div>
+    <div id="answer-feedback" class="hidden">
+      <span id="feedback-icon"></span>
+      <span id="feedback-text"></span>
+      <p id="explanation-text" class="hidden"></p>
     </div>
   </div>
+</div>
 
-  <script>
-    // Dados injetados pelo Flask para o jogo
-    window.GAME_BOOT = {
-      modo: "{{ modo }}",
-      dificuldade: "{{ dificuldade }}",
-      urls: {
-        questions: "{{ url_for('game_questions') }}",
-        answer:    "{{ url_for('game_answer') }}",
-        finish:    "{{ url_for('game_finish') }}",
-        home:      "{{ url_for('home') }}",
-        game:      "{{ url_for('game') }}",
-        static:    "{{ url_for('static', filename='') }}"
-      }
-    };
-  </script>
-  <script src="{{ url_for('static', filename='js/vendor/phaser.min.js') }}"></script>
-  <script type="module" src="{{ url_for('static', filename='js/game/main.js') }}"></script>
+<!-- HUD -->
+<div id="game-hud" class="hidden">
+  <div id="hud-left">
+    <div id="hud-score">⭐ <span id="score-value">0</span></div>
+    <div id="hud-combo" class="hidden">🔥 ×<span id="combo-value">1</span></div>
+  </div>
+  <div id="hud-center">
+    <div id="hud-progress-wrap">
+      <div id="hud-progress-fill"></div>
+      <span id="hud-progress-text">0/0</span>
+    </div>
+  </div>
+  <div id="hud-right">
+    <div id="hud-lives"></div>
+    <div id="hud-speed">💨 <span id="speed-value">1.0</span>x</div>
+  </div>
+</div>
+
+<!-- Config injetada pelo Flask -->
+<script>
+  window.RUNNER_CONFIG = {
+    modo:         "{{ modo }}",
+    dificuldade:  "{{ dificuldade }}",
+    questionsUrl: "{{ url_for('game_questions') }}",
+    answerUrl:    "{{ url_for('game_answer') }}",
+    finishUrl:    "{{ url_for('game_finish') }}",
+    rankingUrl:   "{{ url_for('exibir_placar', modo='game_' + modo) }}",
+    homeUrl:      "{{ url_for('home') }}"
+  };
+</script>
+
+<!-- Phaser 3 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+<!-- Sistemas (carregar ANTES das cenas) -->
+<script src="{{ url_for('static', filename='js/runner/systems/QuizManager.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/systems/ScoreManager.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/systems/PlayerController.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/systems/ThreatController.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/systems/UIManager.js') }}"></script>
+
+<!-- Cenas -->
+<script src="{{ url_for('static', filename='js/runner/scenes/BootScene.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/scenes/PreloadScene.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/scenes/MenuScene.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/scenes/RunnerScene.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runner/scenes/ResultScene.js') }}"></script>
+
+<!-- Bootstrap -->
+<script src="{{ url_for('static', filename='js/runner/main.js') }}"></script>
+
 </body>
 </html>

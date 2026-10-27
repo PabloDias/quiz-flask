@@ -1,0 +1,42 @@
+<svg viewBox="-2 -2 324 384" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+  <defs>
+    <radialGradient id="bgGlow2" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id="medal2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"></stop>
+      <stop offset="100%" stop-color="#1d4ed8"></stop>
+    </linearGradient>
+    <linearGradient id="ribbon2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"></stop>
+      <stop offset="100%" stop-color="#0b1220"></stop>
+    </linearGradient>
+  </defs>
+
+  <circle cx="160" cy="150" r="140" fill="url(#bgGlow2)"></circle>
+
+  <polygon points="120,230 90,340 160,300 230,340 200,230" fill="url(#ribbon2)"></polygon>
+
+  <circle cx="160" cy="150" r="110" fill="url(#medal2)" stroke="#0b1220" stroke-width="6"></circle>
+  <circle cx="160" cy="150" r="92" fill="none" stroke="#eff6ff" stroke-width="3" stroke-opacity="0.5" stroke-dasharray="6 8"></circle>
+
+  
+  <g transform="translate(160,140)">
+    <path d="M0 -34 C 22 -34, 34 -16, 26 4 C 21 15, 18 20, 18 30 L -18 30 C -18 20, -21 15, -26 4 C -34 -16, -22 -34, 0 -34 Z" fill="#eff6ff"></path>
+    <rect x="-12" y="32" width="24" height="8" rx="3" fill="#eff6ff"></rect>
+    <rect x="-8" y="42" width="16" height="7" rx="3" fill="#eff6ff"></rect>
+    <line x1="0" y1="-46" x2="0" y2="-56" stroke="#eff6ff" stroke-width="6" stroke-linecap="round"></line>
+    <line x1="-30" y1="-30" x2="-38" y2="-38" stroke="#eff6ff" stroke-width="6" stroke-linecap="round"></line>
+    <line x1="30" y1="-30" x2="38" y2="-38" stroke="#eff6ff" stroke-width="6" stroke-linecap="round"></line>
+  </g>
+
+  <text x="160" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="17" fill="#f8fafc">
+    <tspan x="160" dy="0">JOVEM</tspan>
+    <tspan x="160" dy="20">INOVADOR</tspan>
+  </text>
+
+  <text x="160" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">
+    Agroquiz Jovem EXPOCODÓ
+  </text>
+</svg>

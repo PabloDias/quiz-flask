@@ -4,14 +4,50 @@ import random
 import json
 import os
 import sys
+import math
 
 # ══════════════════════════════════════════════════════════════
 #  CÓDIGOS DE ACESSO
 #  Para trocar uma senha, edite apenas o valor entre aspas.
 # ══════════════════════════════════════════════════════════════
 CODIGO_PISCICULTURA = 'peixe'   # acesso: só Piscicultura
-CODIGO_MISTO        = '12345'   # acesso: Clássico + Aprendizagem
-CODIGO_TODOS        = 'dias'    # acesso: tudo + Configurações
+CODIGO_MISTO        = '12345'   # acesso: Classico + Aprendizagem + Agroquiz Jovem EXPOCODO
+CODIGO_TODOS        = 'dias'    # acesso: tudo + Configuracoes
+
+# ══════════════════════════════════════════════════════════════
+#  AGROQUIZ JOVEM EXPOCODO — 52a EXPOCODO 2026 (Codo-MA)
+#  Tema: "A Forca Jovem no Agro"
+#  8 categorias, 1 pergunta sorteada por categoria por partida.
+#  Pontuacao ponderada: Tecnologia/Geoprocessamento/Empreendedorismo
+#  valem 2 pontos, as demais valem 1 ponto (maximo = 11 pontos).
+# ══════════════════════════════════════════════════════════════
+CATEGORIAS_EXPOCODO = [
+    'Clima', 'Producao Rural', 'Sustentabilidade', 'Piscicultura',
+    'Servicos da SAGRIMA', 'Tecnologia', 'Geoprocessamento', 'Empreendedorismo'
+]
+
+PESO_CATEGORIA_EXPOCODO = {
+    'Tecnologia':       2,
+    'Geoprocessamento': 2,
+    'Empreendedorismo': 2,
+    # demais categorias nao listadas aqui valem peso 1 (ver .get(categoria, 1))
+}
+
+MAX_PONTOS_EXPOCODO = sum(PESO_CATEGORIA_EXPOCODO.get(c, 1) for c in CATEGORIAS_EXPOCODO)  # = 11
+
+FAIXAS_EXPOCODO = [
+    (0, 2,  'Explorador do Agro'),
+    (3, 5,  'Jovem Inovador'),
+    (6, 8,  'Especialista AgroTech'),
+    (9, 11, 'Futuro Empreendedor Rural'),
+]
+
+def calcular_faixa_expocodo(pontos):
+    """Retorna o nome da faixa correspondente a pontuacao ponderada do Agroquiz Jovem."""
+    for minimo, maximo, nome in FAIXAS_EXPOCODO:
+        if minimo <= pontos <= maximo:
+            return nome
+    return FAIXAS_EXPOCODO[-1][2]
 
 # --- FUNÇÃO AUXILIAR PARA CAMINHOS (PyInstaller) ---
 def resource_path(relative_path):
@@ -21,6 +57,21 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+def writable_path(relative_path):
+    """Retorna um caminho GRAVAVEL, fora do sys._MEIPASS.
+    Usado para qualquer arquivo que precisa persistir entre execucoes
+    do .exe (placar, config, sessao). sys._MEIPASS e uma pasta temporaria
+    apagada quando o programa fecha - nunca gravar nela.
+    Usa a pasta onde o .exe esta (ou o diretorio atual, em modo dev),
+    dentro de uma subpasta 'dados_salvos' criada na primeira execucao."""
+    if getattr(sys, 'frozen', False):
+        base_path = os.path.dirname(sys.executable)
+    else:
+        base_path = os.path.abspath(".")
+    pasta_dados = os.path.join(base_path, 'dados_salvos')
+    os.makedirs(pasta_dados, exist_ok=True)
+    return os.path.join(pasta_dados, relative_path)
 
 # --- CONFIGURAÇÃO DO APP FLASK ---
 template_folder = resource_path('templates')
@@ -59,15 +110,22 @@ def carregar_perguntas(nome_arquivo):
                 linhas = [linha.strip() for linha in bloco.strip().split('\n') if linha.strip()]
                 if len(linhas) < 2:
                     continue
-                texto_pergunta    = linhas[0]
+                texto_pergunta    = None
                 texto_explicacao  = None
-                linhas_sem_explicacao = []
-                for linha in linhas[1:]:
+                texto_categoria   = None
+                linhas_sem_extras = []
+                for linha in linhas:
                     if linha.lower().startswith('explicacao:'):
                         texto_explicacao = linha.split(':', 1)[1].strip()
+                    elif linha.lower().startswith('categoria:'):
+                        texto_categoria = linha.split(':', 1)[1].strip()
+                    elif texto_pergunta is None:
+                        texto_pergunta = linha
                     else:
-                        linhas_sem_explicacao.append(linha)
-                opcoes_raw       = linhas_sem_explicacao
+                        linhas_sem_extras.append(linha)
+                if not texto_pergunta:
+                    continue
+                opcoes_raw       = linhas_sem_extras
                 resposta_correta = ""
                 textos_das_opcoes = []
                 for opcao in opcoes_raw:
@@ -82,7 +140,8 @@ def carregar_perguntas(nome_arquivo):
                     'pergunta':   texto_pergunta,
                     'opcoes':     textos_das_opcoes,
                     'resposta':   resposta_correta,
-                    'explicacao': texto_explicacao
+                    'explicacao': texto_explicacao,
+                    'categoria':  texto_categoria
                 })
     except FileNotFoundError:
         print(f"AVISO: O arquivo '{nome_arquivo}' não foi encontrado.")
@@ -110,11 +169,11 @@ def salvar_placar(placar, modo):
 #  TABELA DE NÍVEIS DE ACESSO
 #  Cada nível define quais modos aparecem no home.html.
 #
-#  access_level   | Clássico | Aprendizagem | Piscicultura | Config
-#  ─────────────────────────────────────────────────────────────────
-#  'piscicultura' |    ✗     |      ✗       |      ✓       |   ✗
-#  'misto'        |    ✓     |      ✓       |      ✗       |   ✗
-#  'todos'        |    ✓     |      ✓       |      ✓       |   ✓
+#  access_level   | Classico | Aprendizagem | Piscicultura | Agroquiz Jovem | Config
+#  ──────────────────────────────────────────────────────────────────────────────
+#  'piscicultura' |    X     |      X       |      V       |       X        |   X
+#  'misto'        |    V     |      V       |      X       |       V        |   X
+#  'todos'        |    V     |      V       |      V       |       V        |   V
 # ══════════════════════════════════════════════════════════════
 
 # --- ROTAS DA APLICAÇÃO ---
@@ -166,6 +225,25 @@ def salvar_configuracao():
 
 @app.route('/iniciar/<modo_de_jogo>')
 def iniciar_jogo(modo_de_jogo):
+    session['modo_de_jogo'] = modo_de_jogo
+    session['pontuacao']    = 0
+    session['acertos']      = 0
+
+    if modo_de_jogo == 'expocodo_jovem':
+        # Sorteia exatamente 1 pergunta por categoria (8 categorias = 8 perguntas por partida)
+        todas_perguntas = carregar_perguntas('perguntas_expocodo_jovem.txt')
+        if not todas_perguntas:
+            return redirect(url_for('home'))
+        indices_por_categoria = {}
+        for indice, pergunta in enumerate(todas_perguntas):
+            indices_por_categoria.setdefault(pergunta.get('categoria'), []).append(indice)
+        indices_sorteados = [random.choice(indices) for indices in indices_por_categoria.values() if indices]
+        random.shuffle(indices_sorteados)
+        session['lista_de_perguntas']  = todas_perguntas
+        session['ordem_perguntas']     = indices_sorteados
+        session['respostas_expocodo']  = []
+        return redirect(url_for('exibir_pergunta', id_pergunta=0))
+
     config        = carregar_config()
     num_perguntas = config.get('perguntas_por_partida', 5)
     arquivos_quiz = {
@@ -178,13 +256,10 @@ def iniciar_jogo(modo_de_jogo):
     if not lista_de_perguntas_completa:
         return redirect(url_for('home'))
     session['lista_de_perguntas'] = lista_de_perguntas_completa
-    session['modo_de_jogo']       = modo_de_jogo
     indices_disponiveis           = list(range(len(lista_de_perguntas_completa)))
     num_a_sortear                 = min(num_perguntas, len(indices_disponiveis))
     indices_sorteados             = random.sample(indices_disponiveis, num_a_sortear)
     session['ordem_perguntas']    = indices_sorteados
-    session['pontuacao']          = 0
-    session['acertos']            = 0
     return redirect(url_for('exibir_pergunta', id_pergunta=0))
 
 @app.route('/quiz/<int:id_pergunta>')
@@ -223,18 +298,39 @@ def responder(id_pergunta):
     lista_de_perguntas = session.get('lista_de_perguntas', [])
     ordem_perguntas    = session.get('ordem_perguntas', [])
     id_real_pergunta   = ordem_perguntas[id_pergunta]
-    resposta_correta   = lista_de_perguntas[id_real_pergunta]['resposta']
+    questao_original   = lista_de_perguntas[id_real_pergunta]
+    resposta_correta   = questao_original['resposta']
     resposta_jogador   = request.form['opcao']
     tempo_levado       = int(request.form.get('tempo_levado', 30))
-    pontos_ganhos      = 0
-    if resposta_jogador == resposta_correta:
+    modo_de_jogo       = session.get('modo_de_jogo', 'classico')
+    acertou            = (resposta_jogador == resposta_correta)
+
+    if modo_de_jogo == 'expocodo_jovem':
+        categoria     = questao_original.get('categoria')
+        peso          = PESO_CATEGORIA_EXPOCODO.get(categoria, 1)
+        pontos_ganhos = peso if acertou else 0
+        if acertou:
+            session['acertos'] = session.get('acertos', 0) + 1
+        session['pontuacao'] = session.get('pontuacao', 0) + pontos_ganhos
+
+        respostas_expocodo = session.get('respostas_expocodo', [])
+        respostas_expocodo.append({'categoria': categoria, 'acertou': acertou})
+        session['respostas_expocodo'] = respostas_expocodo
+
+        proximo_id = id_pergunta + 1
+        if proximo_id >= len(ordem_perguntas):
+            return redirect(url_for('animacao'))
+        return redirect(url_for('exibir_pergunta', id_pergunta=proximo_id))
+
+    # --- fluxo original (Classico / Aprendizagem / Piscicultura), intocado ---
+    pontos_ganhos = 0
+    if acertou:
         session['acertos'] = session.get('acertos', 0) + 1
         if tempo_levado < 30:
             pontos_ganhos = 500 + int(500 * ((30 - tempo_levado) / 30))
         else:
             pontos_ganhos = 100
     session['pontuacao'] = session.get('pontuacao', 0) + pontos_ganhos
-    modo_de_jogo = session.get('modo_de_jogo', 'classico')
     if modo_de_jogo in ['aprendizagem', 'piscicultura']:
         session['ultima_resposta_jogador'] = resposta_jogador
         return redirect(url_for('revisao', id_pergunta=id_pergunta))
@@ -272,15 +368,33 @@ def resultado():
     pontuacao       = session.get('pontuacao', 0)
     total_perguntas = len(session.get('ordem_perguntas', []))
     acertos         = session.get('acertos', 0)
-    return render_template('resultado.html', pontuacao=pontuacao, total=total_perguntas, acertos=acertos)
+    modo            = session.get('modo_de_jogo', 'classico')
+
+    contexto = dict(pontuacao=pontuacao, total=total_perguntas, acertos=acertos, modo=modo)
+
+    if modo == 'expocodo_jovem':
+        faixa_nome = calcular_faixa_expocodo(pontuacao)
+        contexto.update(
+            faixa_nome=faixa_nome,
+            faixa_slug=faixa_nome.lower().replace(' ', '-'),
+            max_pontos=MAX_PONTOS_EXPOCODO,
+            respostas=session.get('respostas_expocodo', []),
+        )
+
+    return render_template('resultado.html', **contexto)
 
 @app.route('/salvar-pontuacao', methods=['POST'])
 def salvar_pontuacao():
-    nick        = request.form['nick']
-    pontos      = session.get('pontuacao', 0)
-    modo        = session.get('modo_de_jogo', 'classico')
+    nick   = request.form['nick']
+    pontos = session.get('pontuacao', 0)
+    modo   = session.get('modo_de_jogo', 'classico')
+
+    entrada = {'nick': nick, 'pontos': pontos}
+    if modo == 'expocodo_jovem':
+        entrada['faixa'] = calcular_faixa_expocodo(pontos)
+
     placar_atual = carregar_placar(modo)
-    placar_atual.append({'nick': nick, 'pontos': pontos})
+    placar_atual.append(entrada)
     salvar_placar(placar_atual, modo)
     return redirect(url_for('exibir_placar', modo=modo, nick_recente=nick, pontos_recentes=pontos))
 
@@ -479,3 +593,363 @@ def game_finish():
                     'hits': session.get('game_hits', 0),
                     'saved': salvo,
                     'ranking_url': url_for('exibir_placar', modo=f'game_{modo}')})
+# ══════════════════════════════════════════════════════════════
+#  SIMULADOR DO PRODUTOR — EXPOCODO 2026
+#  Modo separado do quiz de pergunta/resposta: decisoes com efeitos
+#  cumulativos em 5 indicadores (Producao, Custos, Agua,
+#  Sustentabilidade, Renda). 3 safras x 4 etapas = 12 decisoes.
+#  Tudo abaixo e NOVO. Nada acima desta linha foi alterado
+#  (exceto a adicao da funcao writable_path(), logo apos resource_path()).
+# ══════════════════════════════════════════════════════════════
+
+_decisoes_cache = None
+
+def carregar_decisoes():
+    """Carrega decisoes.json uma vez e mantem em cache em memoria.
+    Conteudo READ-ONLY do jogo -> usa resource_path (nunca writable_path)."""
+    global _decisoes_cache
+    if _decisoes_cache is None:
+        with open(resource_path('decisoes.json'), encoding='utf-8') as f:
+            _decisoes_cache = json.load(f)
+    return _decisoes_cache
+
+
+def carregar_placar_simulador():
+    """Placar e dado gravavel -> usa writable_path, fora do sys._MEIPASS."""
+    try:
+        with open(writable_path('placar_simulador.json'), encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+
+def salvar_placar_simulador(placar):
+    with open(writable_path('placar_simulador.json'), 'w', encoding='utf-8') as f:
+        json.dump(placar, f, ensure_ascii=False, indent=2)
+
+
+def montar_passos(dados):
+    """Monta a sequencia fixa de 12 passos (3 safras x 4 etapas),
+    sorteando 1 evento por safra do pool. Sorteado uma vez no inicio
+    da partida e guardado na sessao - nao re-sorteia a cada refresh."""
+    passos = []
+    for safra in dados['safras']:
+        passos.append({'tipo': 'preparo', 'ref_id': safra['preparo']['id']})
+        evento = random.choice(dados['eventos'])
+        passos.append({'tipo': 'evento', 'ref_id': evento['id']})
+        passos.append({'tipo': 'manejo', 'ref_id': safra['manejo']['id']})
+        passos.append({'tipo': 'venda', 'ref_id': safra['venda']['id']})
+    return passos
+
+
+def localizar_bloco_simulador(dados, ref_id):
+    """Acha o bloco de decisao (preparo/manejo/venda/evento) pelo id,
+    em qualquer safra ou no pool de eventos."""
+    for safra in dados['safras']:
+        for etapa in ('preparo', 'manejo', 'venda'):
+            if safra[etapa]['id'] == ref_id:
+                return safra[etapa]
+    for evento in dados['eventos']:
+        if evento['id'] == ref_id:
+            return evento
+    raise ValueError(f'bloco de decisao nao encontrado: {ref_id}')
+
+
+def _clamp_simulador(v):
+    return max(0, min(100, v))
+
+
+def aplicar_efeitos_simulador(indicadores, opcao, cultura):
+    """Aplica os efeitos da opcao escolhida, reescalando por peso da
+    cultura quando a opcao tiver as flags escala_renda / escala_agua /
+    escala_tag. Retorna (novo_dict, efeitos_reais_aplicados)."""
+    pesos = cultura['pesos']
+    efeitos_reais = {}
+    novo = dict(indicadores)
+    for chave in ('producao', 'custos', 'agua', 'sustentabilidade', 'renda'):
+        val = opcao['efeitos'].get(chave, 0)
+        if chave == 'renda' and opcao['efeitos'].get('escala_renda'):
+            val = val * pesos['renda_venda']
+        elif chave == 'agua' and opcao['efeitos'].get('escala_agua'):
+            val = val * pesos['sede_agua']
+        elif opcao['efeitos'].get('escala_tag'):
+            tag = opcao.get('_tag_peso')
+            if tag and chave in ('agua', 'sustentabilidade'):
+                val = val * pesos.get(tag, 1.0)
+        novo[chave] = _clamp_simulador(novo[chave] + val)
+        efeitos_reais[chave] = novo[chave] - indicadores[chave]
+    return novo, efeitos_reais
+
+
+def calcular_score_simulador(indicadores):
+    return (indicadores['producao'] + (100 - indicadores['custos'])
+            + indicadores['agua'] + indicadores['sustentabilidade']
+            + indicadores['renda'])
+
+
+def faixa_do_score_simulador(dados, score):
+    for faixa in dados['faixas_resultado']:
+        if score >= faixa['min']:
+            return faixa
+    return dados['faixas_resultado'][-1]
+
+
+def estado_talhao_simulador(passo_no_total):
+    """Deriva o estado visual dos talhoes a partir da posicao dentro
+    da safra atual (0=preparo,1=evento,2=manejo,3=venda)."""
+    posicao_na_safra = passo_no_total % 4
+    return ['vazio', 'broto', 'meio', 'maduro'][posicao_na_safra]
+
+
+ICONE_EMOJI_SIMULADOR = {
+    'solo': '🌱', 'broto': '🌿', 'estrutura': '🏗️', 'agua': '💧',
+    'documento': '📄', 'planta': '🪴', 'moeda': '💰',
+    'chuva': '🌧️', 'sol': '☀️', 'praga': '🐛', 'geada': '❄️',
+    'tecnologia': '📡',
+}
+
+CULTURAS_VIEW_SIMULADOR = [
+    {'id': 'mandioca', 'nome': 'Mandioca', 'tagline': 'Rústica e resiliente', 'sprite': 'tile_0002.png'},
+    {'id': 'hortalicas', 'nome': 'Hortaliças', 'tagline': 'Rápido giro, alto cuidado', 'sprite': 'tile_0020.png'},
+    {'id': 'soja', 'nome': 'Soja', 'tagline': 'Escala e mercado forte', 'sprite': 'tile_0032.png'},
+    {'id': 'gado_leiteiro', 'nome': 'Gado Leiteiro', 'tagline': 'Renda constante, rotina exigente', 'sprite': 'tile_0121.png'},
+]
+
+# Visual do selo por faixa - chaves batem com "selo" em faixas_resultado do decisoes.json
+TIERS_VISUAL = {
+    'ouro':    {'color': 'oklch(0.8 0.15 85)',   'ring': 'oklch(0.8 0.15 85 / 0.22)',   'gradient': 'linear-gradient(135deg, oklch(0.85 0.14 90), oklch(0.72 0.15 75))', 'initial': 'O'},
+    'prata':   {'color': 'oklch(0.82 0.01 260)', 'ring': 'oklch(0.82 0.01 260 / 0.22)', 'gradient': 'linear-gradient(135deg, oklch(0.9 0.005 260), oklch(0.72 0.01 260))', 'initial': 'P'},
+    'bronze':  {'color': 'oklch(0.62 0.1 45)',   'ring': 'oklch(0.62 0.1 45 / 0.22)',   'gradient': 'linear-gradient(135deg, oklch(0.68 0.11 50), oklch(0.5 0.1 40))', 'initial': 'B'},
+    'semente': {'color': 'var(--green)',         'ring': 'oklch(0.64 0.135 145 / 0.22)','gradient': 'linear-gradient(135deg, oklch(0.7 0.13 145), oklch(0.55 0.11 145))', 'initial': 'S'},
+}
+
+MAX_SCORE_SIMULADOR = 500  # 5 indicadores x 100, com custos ja invertido na formula
+
+
+def calcular_radar(indicadores):
+    """Porta pra Python a mesma matematica de radar/pentagono que estava em
+    JS no mockup do Claude Design. cx/cy/maxR/angulos identicos, so pra
+    poder desenhar o SVG server-side (Jinja nao tem seno/cosseno)."""
+    ordem = [
+        ('Produção', indicadores['producao']),
+        ('Custos', indicadores['custos']),
+        ('Água', indicadores['agua']),
+        ('Sustentabilidade', indicadores['sustentabilidade']),
+        ('Renda', indicadores['renda']),
+    ]
+    cx, cy, max_r, n = 200, 200, 150, len(ordem)
+
+    def angulo(i):
+        return -math.pi / 2 + (i * 2 * math.pi) / n
+
+    def ponto(i, r):
+        a = angulo(i)
+        return {'x': cx + r * math.cos(a), 'y': cy + r * math.sin(a)}
+
+    grid_rings = []
+    for frac in (0.2, 0.4, 0.6, 0.8, 1.0):
+        pontos = [ponto(i, max_r * frac) for i in range(n)]
+        grid_rings.append(' '.join(f"{p['x']:.1f},{p['y']:.1f}" for p in pontos))
+
+    axis_lines = [ponto(i, max_r) for i in range(n)]
+
+    data_dots = [ponto(i, (valor / 100) * max_r) for i, (_, valor) in enumerate(ordem)]
+    data_points = ' '.join(f"{p['x']:.1f},{p['y']:.1f}" for p in data_dots)
+
+    label_r = max_r + 32
+    axis_labels = []
+    for i, (nome, _) in enumerate(ordem):
+        p = ponto(i, label_r)
+        if p['x'] < cx - 5:
+            anchor = 'end'
+        elif p['x'] > cx + 5:
+            anchor = 'start'
+        else:
+            anchor = 'middle'
+        axis_labels.append({'x': p['x'], 'y': p['y'], 'anchor': anchor, 'text': nome})
+
+    return {
+        'grid_rings': grid_rings,
+        'axis_lines': axis_lines,
+        'data_points': data_points,
+        'data_dots': data_dots,
+        'axis_labels': axis_labels,
+    }
+
+
+def listar_todos_servicos(dados):
+    """Coleta, em ordem de primeira aparicao, todos os nomes de servico_sagrima
+    possiveis no jogo (safras + eventos), sem repetir."""
+    vistos = []
+    for safra in dados['safras']:
+        for etapa in ('preparo', 'manejo', 'venda'):
+            for opcao in safra[etapa]['opcoes']:
+                nome = opcao.get('servico_sagrima')
+                if nome and nome not in vistos:
+                    vistos.append(nome)
+    for evento in dados['eventos']:
+        for opcao in evento['opcoes']:
+            nome = opcao.get('servico_sagrima')
+            if nome and nome not in vistos:
+                vistos.append(nome)
+    return vistos
+
+
+@app.route('/simulador')
+def simulador_home():
+    # Mesmo padrao de acesso das demais rotas do projeto (ver configuracao()).
+    # Simulador liberado para os niveis 'misto' e 'todos', junto do Agroquiz Jovem.
+    if session.get('access_level') not in ('misto', 'todos'):
+        return redirect(url_for('home'))
+    return render_template('sim_home.html', culturas=CULTURAS_VIEW_SIMULADOR)
+
+
+@app.route('/simulador/iniciar', methods=['POST'])
+def simulador_iniciar():
+    dados = carregar_decisoes()
+    cultura_id = request.get_json(force=True).get('cultura', 'mandioca')
+    cultura = next(c for c in dados['culturas'] if c['id'] == cultura_id)
+
+    session['sim'] = {
+        'cultura_id': cultura_id,
+        'indicadores': dict(dados['indicadores_iniciais']),
+        'passo': 0,
+        'passos': montar_passos(dados),
+        'servicos': [],
+    }
+    return jsonify({'ok': True})
+
+
+@app.route('/simulador/decisao')
+def simulador_decisao():
+    if 'sim' not in session:
+        return redirect(url_for('simulador_home'))
+
+    dados = carregar_decisoes()
+    sim = session['sim']
+
+    if sim['passo'] >= len(sim['passos']):
+        return redirect(url_for('simulador_resultado'))
+
+    passo_atual = sim['passos'][sim['passo']]
+    bloco = localizar_bloco_simulador(dados, passo_atual['ref_id'])
+
+    safra_numero = (sim['passo'] // 4) + 1
+    estado = estado_talhao_simulador(sim['passo'])
+    talhoes = [{'n': i, 'estado': estado} for i in range(1, 7)]
+
+    situacao = {
+        'titulo': bloco['titulo'].upper(),
+        'contexto': bloco['contexto'],
+        'icone_emoji': ICONE_EMOJI_SIMULADOR.get(bloco.get('icone'), '🌱'),
+    }
+    opcoes = [{'id': o['id'], 'texto': o['texto']} for o in bloco['opcoes']]
+
+    return render_template(
+        'sim_decisao.html',
+        safra_label=f'Safra {safra_numero}',
+        decision_number=sim['passo'] + 1,
+        decision_total=len(sim['passos']),
+        situacao=situacao,
+        opcoes=opcoes,
+        indicadores=sim['indicadores'],
+        talhoes=talhoes,
+        cultura_id=sim['cultura_id'],
+    )
+
+
+@app.route('/simulador/escolher/<opcao_id>', methods=['POST'])
+def simulador_escolher(opcao_id):
+    if 'sim' not in session:
+        return jsonify({'erro': 'sessao expirada'}), 400
+
+    dados = carregar_decisoes()
+    sim = session['sim']
+    cultura = next(c for c in dados['culturas'] if c['id'] == sim['cultura_id'])
+
+    passo_atual = sim['passos'][sim['passo']]
+    bloco = localizar_bloco_simulador(dados, passo_atual['ref_id'])
+    opcao = next(o for o in bloco['opcoes'] if o['id'] == opcao_id)
+
+    if passo_atual['tipo'] == 'evento':
+        opcao = dict(opcao)
+        opcao['efeitos'] = dict(opcao['efeitos'])
+        opcao['_tag_peso'] = bloco.get('tag_peso')
+
+    novo_indicadores, efeitos_reais = aplicar_efeitos_simulador(sim['indicadores'], opcao, cultura)
+    sim['indicadores'] = novo_indicadores
+
+    if opcao.get('servico_sagrima'):
+        sim['servicos'].append(opcao['servico_sagrima'])
+
+    sim['passo'] += 1
+    session['sim'] = sim  # reatribuir - obrigatorio p/ Flask-Session marcar como modificado
+
+    return jsonify({
+        'feedback': opcao['feedback'],
+        'servico': opcao.get('servico_sagrima'),
+        'atual': novo_indicadores,
+        'efeitos': efeitos_reais,
+        'fim': sim['passo'] >= len(sim['passos']),
+    })
+
+
+@app.route('/simulador/resultado')
+def simulador_resultado():
+    if 'sim' not in session:
+        return redirect(url_for('simulador_home'))
+
+    dados = carregar_decisoes()
+    sim = session['sim']
+    score = calcular_score_simulador(sim['indicadores'])
+    faixa = faixa_do_score_simulador(dados, score)
+
+    todos_servicos = listar_todos_servicos(dados)
+    usados = set(sim['servicos'])
+    servicos_todos = [{'nome': nome, 'usado': nome in usados} for nome in todos_servicos]
+
+    tier = TIERS_VISUAL.get(faixa.get('selo'), TIERS_VISUAL['semente'])
+    radar = calcular_radar(sim['indicadores'])
+
+    resultado_sessao = {
+        'cultura_id': sim['cultura_id'],
+        'indicadores': sim['indicadores'],
+        'score': score,
+        'faixa': faixa,
+        'servicos': sorted(usados),
+    }
+    session['sim_resultado'] = resultado_sessao
+
+    return render_template(
+        'sim_resultado.html',
+        score=score,
+        max_score=MAX_SCORE_SIMULADOR,
+        faixa=faixa,
+        indicadores=sim['indicadores'],
+        servicos_todos=servicos_todos,
+        radar=radar,
+        tier=tier,
+    )
+
+
+@app.route('/simulador/salvar_nome', methods=['POST'])
+def simulador_salvar_nome():
+    """Chamado pela tela de resultado quando o visitante digita o nome
+    no teclado virtual (reaproveitando o mesmo teclado do quiz)."""
+    if 'sim_resultado' not in session:
+        return jsonify({'erro': 'sem resultado na sessao'}), 400
+
+    nome = request.get_json(force=True).get('nome', '').strip()[:40] or 'Anonimo'
+    resultado = session['sim_resultado']
+
+    placar = carregar_placar_simulador()
+    placar.append({
+        'nome': nome,
+        'score': resultado['score'],
+        'cultura': resultado['cultura_id'],
+        'faixa': resultado['faixa']['titulo'],
+    })
+    placar.sort(key=lambda p: p['score'], reverse=True)
+    salvar_placar_simulador(placar[:50])
+
+    return jsonify({'ok': True})

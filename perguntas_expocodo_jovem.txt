@@ -1,0 +1,320 @@
+Categoria: Clima
+Qual fenômeno oceânico climático mais reduz as chuvas no Nordeste, incluindo o Maranhão?
+*El Niño
+La Niña
+Dipolo do Oceano Índico
+Oscilação Multidecadal do Atlântico
+Explicacao: O El Nino aquece o Pacifico e tende a reduzir as chuvas no Nordeste, ao contrario da La Nina, que costuma aumentar as chuvas na regiao.
+---
+Categoria: Clima
+Qual é o período do ano mais determinante para o plantio de arroz de sequeiro no Maranhão?
+*Início do período chuvoso
+Auge do período de estiagem
+Transição entre outono e inverno
+Pico da estação seca
+Explicacao: O plantio de arroz de sequeiro depende da chegada regular das chuvas no inicio do periodo chuvoso para garantir boa germinacao.
+---
+Categoria: Clima
+Qual é a principal utilidade da previsão do tempo de curto prazo para o produtor rural?
+*Planejar plantio, colheita e aplicação de insumos
+Determinar o preço de venda dos produtos
+Substituir a análise de solo antes do plantio
+Definir o tipo de semente a ser utilizada
+Explicacao: A previsao de curto prazo ajuda o produtor a escolher o melhor momento para atividades sensiveis ao clima.
+---
+Categoria: Clima
+Qual é um dos principais efeitos do desmatamento de matas ciliares sobre o clima local?
+*Redução da umidade relativa do ar na região
+Aumento da frequência de geadas
+Elevação do nível do mar na região
+Redução da radiação solar incidente
+Explicacao: Matas ciliares ajudam a manter a umidade do ar e do solo; sua remocao tende a reduzir a umidade local e afetar o regime de chuvas.
+---
+Categoria: Clima
+Para que serve um pluviômetro na propriedade rural?
+*Medir o volume de chuva acumulado em um período
+Medir a velocidade do vento
+Medir a temperatura do solo em profundidade
+Medir a umidade relativa do ar
+Explicacao: O pluviometro mede o volume de chuva, sendo uma ferramenta simples e importante para o planejamento agricola.
+---
+Categoria: Producao Rural
+Qual dessas culturas é historicamente uma das mais importantes na agricultura familiar maranhense?
+*Mandioca
+Uva
+Trigo
+Aveia
+Explicacao: A mandioca e uma cultura tradicional e de grande importancia na agricultura familiar do Maranhao.
+---
+Categoria: Producao Rural
+O que é o calendário agrícola?
+*Um guia que orienta as melhores épocas de plantio e colheita de cada cultura
+Um documento fiscal exigido para venda de produtos rurais
+Um registro de propriedade emitido por órgão fundiário
+Um cronograma de pagamento de financiamentos rurais
+Explicacao: O calendario agricola orienta o produtor sobre o momento ideal de plantio e colheita, considerando o clima da regiao.
+---
+Categoria: Producao Rural
+O que caracteriza principalmente a agricultura familiar?
+*Uso predominante de mão de obra da própria família na produção
+Uso exclusivo de maquinário de grande porte
+Produção destinada apenas à exportação
+Financiamento exclusivo por bancos internacionais
+Explicacao: A agricultura familiar se caracteriza pelo uso da mao de obra da propria familia, sendo fundamental para a economia rural.
+---
+Categoria: Producao Rural
+Qual é o principal benefício da rotação de culturas para o solo?
+*Reduz o esgotamento de nutrientes específicos e ajuda a controlar pragas
+Aumenta instantaneamente o pH do solo
+Elimina totalmente a necessidade de adubação
+Impede qualquer tipo de erosão do solo
+Explicacao: A rotacao de culturas evita a exaustao continua dos mesmos nutrientes e ajuda a quebrar ciclos de pragas especificas.
+---
+Categoria: Producao Rural
+Qual é uma vantagem da criação de galinhas caipiras em pequenas propriedades?
+*Exige pouco espaço e gera renda com produção de ovos e carne
+Exige grandes áreas de pastagem
+Depende exclusivamente de ração importada
+Não pode ser combinada com outras atividades agrícolas
+Explicacao: A avicultura caipira e uma atividade de baixo custo e pouco espaco, muito usada como fonte de renda complementar.
+---
+Categoria: Tecnologia
+O que é agricultura de precisão?
+*Uso de dados, sensores e tecnologia para otimizar o manejo da lavoura
+Técnica de plantio baseada exclusivamente no calendário lunar
+Substituição total da mão de obra humana por máquinas
+Cultivo realizado apenas em ambientes fechados
+Explicacao: A agricultura de precisao usa GPS, sensores e analise de dados para tomar decisoes mais eficientes sobre plantio e adubacao.
+---
+Categoria: Tecnologia
+Qual é uma das principais aplicações de drones na agricultura atual?
+*Monitorar plantações e aplicar insumos de forma localizada
+Substituir totalmente a necessidade de irrigação
+Realizar a colheita mecanizada completa
+Armazenar grãos após a colheita
+Explicacao: Drones sao usados principalmente para monitoramento aereo e aplicacao localizada de defensivos ou fertilizantes.
+---
+Categoria: Tecnologia
+Para que servem os sensores de umidade do solo?
+*Indicar a quantidade de água disponível para irrigar de forma mais eficiente
+Medir diretamente a fertilidade do solo
+Prever a ocorrência de pragas na lavoura
+Determinar o tipo de semente ideal
+Explicacao: Sensores de umidade ajudam o produtor a irrigar na medida certa, evitando desperdicio de agua e energia.
+---
+Categoria: Tecnologia
+Como aplicativos de celular voltados ao campo costumam ajudar o pequeno produtor?
+*Fornecendo previsão do tempo, preços de mercado e orientações técnicas
+Substituindo totalmente a necessidade de assistência técnica presencial
+Eliminando a necessidade de análise de solo
+Garantindo automaticamente o financiamento rural
+Explicacao: Esses aplicativos reunem informacoes uteis como clima, precos e orientacoes tecnicas, mas nao substituem a assistencia tecnica.
+---
+Categoria: Tecnologia
+Qual é uma aplicação comum de imagens de satélite na agricultura?
+*Monitorar o desenvolvimento e a saúde das plantações em grandes áreas
+Determinar o preço de venda dos produtos agrícolas
+Substituir a necessidade de adubação do solo
+Realizar o controle sanitário de animais
+Explicacao: Imagens de satelite permitem acompanhar o desenvolvimento das plantacoes e identificar problemas em grandes areas.
+---
+Categoria: Sustentabilidade
+O que é um sistema agroflorestal?
+*Sistema que combina árvores, cultivos agrícolas e, às vezes, criação animal na mesma área
+Sistema de cultivo exclusivo em estufas climatizadas
+Área destinada apenas à preservação, sem nenhuma produção
+Técnica de cultivo hidropônico em larga escala
+Explicacao: Sistemas agroflorestais combinam diferentes especies na mesma area, mantendo o solo produtivo por mais tempo.
+---
+Categoria: Sustentabilidade
+Qual é um benefício do reaproveitamento da água da chuva em propriedades rurais?
+*Reduz o consumo de água tratada e ajuda em períodos de estiagem
+Aumenta o custo total da produção agrícola
+Substitui totalmente a necessidade de irrigação em qualquer situação
+Elimina a necessidade de outorga de uso da água
+Explicacao: Captar agua da chuva em cisternas reduz a dependencia de agua tratada, ajudando em periodos de estiagem.
+---
+Categoria: Sustentabilidade
+Qual é a principal função da mata ciliar às margens dos rios?
+*Proteger o solo contra erosão e ajudar a manter a qualidade da água
+Aumentar a vazão dos rios na época de seca
+Servir exclusivamente como área de lazer
+Facilitar a navegação de embarcações maiores
+Explicacao: A mata ciliar protege as margens contra erosao e ajuda a filtrar sedimentos, contribuindo para a qualidade da agua.
+---
+Categoria: Sustentabilidade
+O que é compostagem?
+*Processo de transformar restos orgânicos em adubo natural
+Processo de fabricar ração animal a partir de plástico reciclado
+Técnica de armazenamento de grãos em silos hermeticamente fechados
+Método de purificação de água para consumo humano
+Explicacao: A compostagem recicla restos organicos, transformando-os em adubo rico em nutrientes.
+---
+Categoria: Sustentabilidade
+Qual dessas é considerada uma fonte de energia renovável usada em propriedades rurais?
+*Energia solar fotovoltaica
+Óleo diesel
+Carvão mineral
+Gás natural
+Explicacao: A energia solar fotovoltaica e uma fonte renovavel cada vez mais utilizada em propriedades rurais.
+---
+Categoria: Piscicultura
+Qual espécie de peixe é mais utilizada em tanques-rede no Maranhão?
+*Tilápia
+Salmão
+Bacalhau
+Truta
+Explicacao: A tilapia se adapta bem ao clima quente do Maranhao e tem ciclo de producao relativamente rapido.
+---
+Categoria: Piscicultura
+O que é um tanque-rede?
+*Estrutura flutuante usada para criar peixes dentro de rios, açudes ou barragens
+Equipamento usado exclusivamente para pesca esportiva
+Reservatório subterrâneo de armazenamento de água
+Sistema de irrigação por gotejamento
+Explicacao: O tanque-rede e uma estrutura flutuante instalada em corpos d'agua naturais, permitindo a criacao organizada de peixes.
+---
+Categoria: Piscicultura
+Por que a qualidade da água é fundamental na piscicultura?
+*Porque influencia diretamente a saúde, o crescimento e a sobrevivência dos peixes
+Porque determina exclusivamente o sabor da carne do peixe
+Porque define o preço de venda no mercado
+Porque não tem relação direta com a produtividade
+Explicacao: Fatores como oxigenio dissolvido, temperatura e pH da agua influenciam diretamente a saude dos peixes.
+---
+Categoria: Piscicultura
+Qual é a principal finalidade da aeração (oxigenação) da água em tanques de criação de peixes?
+*Aumentar a quantidade de oxigênio disponível para a respiração dos peixes
+Aumentar a temperatura da água rapidamente
+Reduzir a quantidade de água necessária no tanque
+Eliminar a necessidade de alimentação dos peixes
+Explicacao: A aeracao aumenta o oxigenio dissolvido na agua, evitando mortandade em tanques com alta densidade de peixes.
+---
+Categoria: Piscicultura
+Qual é uma vantagem da piscicultura para o pequeno produtor rural?
+*Permite diversificar a produção e gerar renda complementar
+Exige investimento inicial maior que qualquer outra atividade rural
+Só pode ser praticada em grandes propriedades
+Impede o uso da água para outras finalidades agrícolas
+Explicacao: A piscicultura pode ser praticada em pequena escala, complementando a renda familiar.
+---
+Categoria: Geoprocessamento
+O que é geoprocessamento aplicado à agricultura?
+*Uso de mapas e dados geográficos para planejar o uso da terra
+Processo de irrigação automatizada por sensores
+Técnica de previsão climática de longo prazo
+Sistema de classificação de sementes por tamanho
+Explicacao: O geoprocessamento utiliza mapas, imagens de satelite e dados espaciais para apoiar o planejamento do uso da terra.
+---
+Categoria: Geoprocessamento
+Qual é a principal utilidade do GPS na atividade rural?
+*Localizar e demarcar áreas da propriedade com precisão
+Determinar automaticamente o tipo de solo
+Prever a ocorrência de pragas na lavoura
+Substituir a necessidade de análise de água
+Explicacao: O GPS permite demarcar com precisao talhoes, estradas internas e areas de preservacao dentro da propriedade.
+---
+Categoria: Geoprocessamento
+O que representa um mapa de uso do solo?
+*Como cada área da propriedade está sendo utilizada (lavoura, pastagem, preservação, etc.)
+Apenas os limites internacionais de uma região
+Somente a localização de rios e nascentes
+Exclusivamente as áreas urbanas próximas à propriedade
+Explicacao: Mapas de uso do solo ajudam o produtor a planejar onde plantar, criar animais ou preservar vegetacao.
+---
+Categoria: Geoprocessamento
+Como imagens de satélite auxiliam no monitoramento ambiental rural?
+*Permitem identificar desmatamento e mudanças na cobertura vegetal ao longo do tempo
+Servem apenas para determinar o preço da terra
+Substituem totalmente a fiscalização presencial
+Medem diretamente a fertilidade do solo
+Explicacao: Imagens de satelite permitem acompanhar mudancas na vegetacao e identificar areas de desmatamento ao longo do tempo.
+---
+Categoria: Geoprocessamento
+O que são coordenadas geográficas?
+*Valores de latitude e longitude que indicam a localização exata de um ponto
+Códigos de identificação fiscal de propriedades rurais
+Medidas de área usadas exclusivamente em hectares
+Números de registro de máquinas agrícolas
+Explicacao: Coordenadas geograficas (latitude e longitude) permitem localizar com precisao qualquer ponto no mapa ou no GPS.
+---
+Categoria: Empreendedorismo
+O que é uma cooperativa agrícola?
+*Organização em que produtores se unem para comprar e vender com mais força de negociação
+Empresa que compra terras exclusivamente de pequenos produtores
+Órgão do governo responsável pela fiscalização sanitária
+Instituição financeira exclusiva para grandes fazendas
+Explicacao: Cooperativas permitem que produtores se unam para ganhar mais poder de negociacao na compra de insumos e venda da producao.
+---
+Categoria: Empreendedorismo
+O que significa "agregar valor" a um produto agrícola?
+*Transformar a matéria-prima para vendê-la por um preço melhor
+Reduzir a qualidade do produto para baratear a venda
+Vender sempre o produto in natura, sem nenhuma alteração
+Diminuir o volume de produção para aumentar a escassez
+Explicacao: Transformar mandioca em farinha, por exemplo, agrega valor ao produto e pode aumentar a renda do produtor.
+---
+Categoria: Empreendedorismo
+Por que o planejamento financeiro é importante para o produtor rural?
+*Ajuda a controlar gastos e a tomar melhores decisões de investimento
+Porque é exigido apenas em operações de exportação
+Porque elimina automaticamente qualquer risco financeiro
+Porque substitui a necessidade de crédito rural
+Explicacao: Planejar receitas e despesas ajuda o produtor a evitar dividas desnecessarias e investir de forma mais consciente.
+---
+Categoria: Empreendedorismo
+Qual é uma forma comum de divulgar produtos rurais para novos clientes atualmente?
+*Redes sociais e plataformas de venda online
+Exclusivamente anúncios em jornais impressos internacionais
+Apenas indicação boca a boca dentro da propriedade
+Cartazes fixados somente em rodovias federais
+Explicacao: Redes sociais e marketplaces ampliam o alcance de pequenos produtores, conectando-os a novos clientes.
+---
+Categoria: Empreendedorismo
+O que caracteriza um jovem empreendedor rural?
+*Buscar inovação e novas oportunidades de negócio no campo
+Rejeitar qualquer tipo de tecnologia no trabalho rural
+Trabalhar exclusivamente fora do setor agropecuário
+Depender exclusivamente de programas assistenciais
+Explicacao: O jovem empreendedor rural busca unir conhecimento tradicional e inovacao para gerar renda no campo.
+---
+Categoria: Servicos da SAGRIMA
+O que é ATER?
+*Assistência Técnica e Extensão Rural oferecida a produtores
+Um tipo de imposto cobrado sobre a produção agrícola
+Um sistema de irrigação automatizado
+Um registro obrigatório de propriedades rurais
+Explicacao: A ATER oferece orientacao tecnica gratuita para ajudar produtores a melhorar sua producao e renda.
+---
+Categoria: Servicos da SAGRIMA
+Qual é a principal função da defesa agropecuária?
+*Prevenir e controlar doenças e pragas em plantas e animais
+Definir o preço mínimo dos produtos agrícolas
+Substituir totalmente o trabalho do médico veterinário particular
+Fiscalizar exclusivamente estabelecimentos urbanos
+Explicacao: A defesa agropecuaria atua na prevencao e controle de pragas e doencas que podem causar grandes prejuizos.
+---
+Categoria: Servicos da SAGRIMA
+O que o crédito rural pode oferecer a um pequeno produtor?
+*Recursos financeiros com condições facilitadas para investir na propriedade
+Garantia de lucro independentemente da produção
+Isenção total de qualquer tipo de imposto
+Substituição da necessidade de mão de obra na propriedade
+Explicacao: O credito rural oferece condicoes facilitadas de juros e prazos para investimentos na producao agropecuaria.
+---
+Categoria: Servicos da SAGRIMA
+Por que é importante regularizar a documentação de uma propriedade rural?
+*Facilita o acesso a crédito, programas oficiais e comercialização legal da produção
+Porque é exigido apenas para propriedades com mais de mil hectares
+Porque substitui a necessidade de licenciamento ambiental
+Porque garante automaticamente isenção de impostos
+Explicacao: A documentacao regularizada garante acesso a politicas publicas, credito e venda formal da producao.
+---
+Categoria: Servicos da SAGRIMA
+Qual é um exemplo de serviço que a SAGRIMA pode oferecer ao produtor rural?
+*Orientação técnica e apoio a programas de desenvolvimento rural
+Venda direta de lotes urbanos
+Fabricação de insumos industriais
+Organização exclusiva de eventos esportivos
+Explicacao: A SAGRIMA conecta produtores a servicos de assistencia tecnica, sanidade agropecuaria e programas de fomento ao desenvolvimento rural.
+---

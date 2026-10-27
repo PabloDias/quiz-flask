@@ -113,6 +113,25 @@
       margin-top: .2rem;
     }
 
+    .categorias-resumo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      justify-content: center;
+      margin: .4rem 0;
+    }
+
+    .chip-categoria {
+      padding: .35rem .8rem;
+      border-radius: 999px;
+      font-size: clamp(.72rem, 1vw, .85rem);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .chip-categoria.acerto { background: #065f46; }
+    .chip-categoria.erro   { background: #7f1d1d; }
+
     .save-section {
       width: 100%;
       border-top: 1px solid var(--border);
@@ -307,31 +326,64 @@
   <div class="result-wrap">
 
     <div class="col-img">
-      <img src="{{ url_for('static', filename='img/Pablo.png') }}" alt="Desenvolvedor">
-      <p>Desenvolvido por: Pablo Dias</p>
+      {% if modo == 'expocodo_jovem' %}
+        <img src="{{ url_for('static', filename='img/badges/' + faixa_slug + '.svg') }}" alt="{{ faixa_nome }}">
+        <p>52ª EXPOCODÓ 2026 · A Força Jovem no Agro</p>
+      {% else %}
+        <img src="{{ url_for('static', filename='img/Pablo.png') }}" alt="Desenvolvedor">
+        <p>Desenvolvido por: Pablo Dias</p>
+      {% endif %}
     </div>
 
     <div class="col-result">
 
-      <div class="result-emoji">
-        {% if acertos == total %}🏆
-        {% elif acertos >= total * 0.6 %}🥈
-        {% else %}📚{% endif %}
-      </div>
+      {% if modo == 'expocodo_jovem' %}
 
-      <h1 class="result-title">Quiz Finalizado!</h1>
+        <div class="result-emoji">🌾</div>
+        <h1 class="result-title">{{ faixa_nome }}</h1>
 
-      <div class="result-stats">
-        <div class="stat-box">
-          <div class="stat-val green">{{ acertos }}/{{ total }}</div>
-          <div class="stat-label">Acertos</div>
+        <div class="result-stats">
+          <div class="stat-box">
+            <div class="stat-val green">{{ acertos }}/{{ total }}</div>
+            <div class="stat-label">Acertos</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val blue">{{ pontuacao }}/{{ max_pontos }}</div>
+            <div class="stat-label">Pontos</div>
+          </div>
         </div>
 
-        <div class="stat-box">
-          <div class="stat-val blue">{{ pontuacao }}</div>
-          <div class="stat-label">Pontos</div>
+        <div class="categorias-resumo">
+          {% for r in respostas %}
+            <span class="chip-categoria {{ 'acerto' if r.acertou else 'erro' }}">
+              {{ '✓' if r.acertou else '✗' }} {{ r.categoria }}
+            </span>
+          {% endfor %}
         </div>
-      </div>
+
+      {% else %}
+
+        <div class="result-emoji">
+          {% if acertos == total %}🏆
+          {% elif acertos >= total * 0.6 %}🥈
+          {% else %}📚{% endif %}
+        </div>
+
+        <h1 class="result-title">Quiz Finalizado!</h1>
+
+        <div class="result-stats">
+          <div class="stat-box">
+            <div class="stat-val green">{{ acertos }}/{{ total }}</div>
+            <div class="stat-label">Acertos</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-val blue">{{ pontuacao }}</div>
+            <div class="stat-label">Pontos</div>
+          </div>
+        </div>
+
+      {% endif %}
 
       <div class="save-section">
         <h3>💾 Salvar no Placar</h3>

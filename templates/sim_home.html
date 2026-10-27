@@ -1,0 +1,182 @@
+{# ============================================================
+   sim_home.html
+   Tela inicial / selecao de cultura do Simulador do Produtor
+   Convertido do mockup do Claude Design para Jinja2 / Flask
+
+   Variaveis esperadas do app.py (via render_template):
+     culturas -> list de dict: {id, nome, tagline, sprite}
+       sprite = caminho do icone dentro de /static/sprites/culturas/
+
+     Icones finais confirmados (Kenney Tiny Farm):
+       mandioca      -> tile_0002.png (raiz/galho marrom, reaproveitado como tuberculo)
+       hortalicas    -> tile_0020.png (planta roxa madura)
+       soja          -> tile_0032.png (espiga de milho, substituto - pack nao tem soja)
+       gado_leiteiro -> tile_0121.png (vaca)
+   ============================================================ #}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador do Produtor - Inicio</title>
+<style>
+  :root {
+    --bg-deep: #12160F;
+    --bg-panel: oklch(0.24 0.018 140);
+    --bg-card: oklch(0.285 0.02 140);
+    --bg-card-hi: oklch(0.33 0.022 140);
+    --border-soft: oklch(0.4 0.03 140 / 0.55);
+    --border-hair: oklch(0.4 0.03 140 / 0.3);
+    --green: oklch(0.64 0.135 145);
+    --green-dim: oklch(0.4 0.09 145);
+    --green-soft-bg: oklch(0.64 0.135 145 / 0.14);
+    --amber: oklch(0.77 0.15 78);
+    --amber-dim: oklch(0.5 0.12 78);
+    --amber-soft-bg: oklch(0.77 0.15 78 / 0.14);
+    --text: #F1EDE2;
+    --text-dim: oklch(0.74 0.015 95);
+    --text-faint: oklch(0.55 0.015 110);
+    --font-head: 'Barlow Condensed', 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --sp-1: clamp(4px, 0.35vw, 7px);
+    --sp-2: clamp(8px, 0.7vw, 14px);
+    --sp-3: clamp(14px, 1.1vw, 22px);
+    --sp-4: clamp(20px, 1.6vw, 32px);
+    --sp-5: clamp(28px, 2.2vw, 44px);
+    --radius-md: clamp(10px, 0.8vw, 16px);
+    --radius-lg: clamp(16px, 1.2vw, 24px);
+    --fs-eyebrow: clamp(13px, 1vw, 17px);
+    --fs-hero: clamp(44px, 3.6vw, 66px);
+    --fs-section: clamp(24px, 1.9vw, 34px);
+    --fs-body: clamp(17px, 1.35vw, 22px);
+    --fs-card-title: clamp(22px, 1.8vw, 30px);
+    --fs-card-sub: clamp(14px, 1.1vw, 18px);
+    --fs-button: clamp(22px, 1.8vw, 30px);
+    --btn-min-h: clamp(80px, 8vh, 108px);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #000; height: 100%; }
+
+  .app {
+    width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    background: var(--bg-deep); color: var(--text);
+    font-family: var(--font-body);
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  header { flex: 0 0 auto; padding-top: var(--sp-5); display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); text-align: center; }
+  h1 { margin: 0; font-family: var(--font-head); font-weight: 800; letter-spacing: 0.03em; font-size: var(--fs-hero); text-transform: uppercase; color: var(--text); }
+  .eyebrow { font-family: var(--font-mono); font-size: var(--fs-eyebrow); color: var(--amber); letter-spacing: 0.1em; }
+
+  .boas-vindas { flex: 0 0 auto; width: min(1400px, 92%); display: flex; align-items: center; gap: var(--sp-5); padding: var(--sp-4) 0; }
+  .fazendeiro-wrap { flex: 0 0 auto; width: clamp(140px, 11vw, 190px); aspect-ratio: 1 / 1.35; border-radius: var(--radius-md); background: var(--bg-panel); border: 1px solid var(--border-hair); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+  .fazendeiro-sprite { width: 78%; aspect-ratio: 1; background-size: contain; background-repeat: no-repeat; background-position: bottom; image-rendering: pixelated; background-image: url('/static/sprites/personagens/tile_0109.png'); }
+  .boas-vindas p { flex: 1; margin: 0; font-size: var(--fs-body); line-height: 1.5; color: var(--text-dim); text-wrap: pretty; }
+
+  .selecao { flex: 1 1 auto; min-height: 0; width: min(1600px, 94%); display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); }
+  h2 { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: var(--fs-section); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text); }
+  .cards-grid { flex: 1; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); min-height: 0; }
+
+  .card-cultura {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-3);
+    background: var(--bg-card); border: 2px solid var(--border-soft); border-radius: var(--radius-lg);
+    padding: var(--sp-4) var(--sp-3); cursor: pointer; font-family: var(--font-body);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .card-cultura:hover { background: var(--bg-card-hi); }
+  .card-cultura:active { transform: scale(0.98); }
+  .card-cultura.selecionado { background: var(--green-soft-bg); border-color: var(--green); }
+
+  .card-icone-wrap { width: clamp(80px, 6.5vw, 116px); aspect-ratio: 1; border-radius: 50%; background: var(--bg-panel); border: 1px solid var(--border-hair); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .card-icone { width: 68%; aspect-ratio: 1; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; }
+  .card-nome { font-family: var(--font-head); font-weight: 700; font-size: var(--fs-card-title); text-transform: uppercase; color: var(--text); letter-spacing: 0.02em; }
+  .card-tagline { font-size: var(--fs-card-sub); color: var(--text-faint); text-align: center; }
+
+  footer { flex: 0 0 auto; width: min(1600px, 94%); padding: var(--sp-3) 0 var(--sp-5); }
+  .btn-comecar {
+    width: 100%; min-height: var(--btn-min-h); border-radius: var(--radius-md); border: none;
+    font-family: var(--font-head); font-weight: 800; letter-spacing: 0.06em; font-size: var(--fs-button);
+    text-transform: uppercase; cursor: not-allowed; background: var(--bg-panel); color: var(--text-faint);
+    transition: background 0.15s ease;
+  }
+  .btn-comecar.ativo { cursor: pointer; background: var(--green); color: var(--bg-deep); }
+  .btn-comecar.ativo:active { transform: scale(0.99); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <h1>Simulador do Produtor</h1>
+    <span class="eyebrow">EXPOCODÓ 2026 · A FORÇA JOVEM NO AGRO</span>
+  </header>
+
+  <section class="boas-vindas">
+    <div class="fazendeiro-wrap"><div class="fazendeiro-sprite"></div></div>
+    <p>
+      Bem-vindo à sua propriedade! Você assume a administração de uma pequena fazenda
+      por 3 safras, tomando decisões que afetam produção, custos, água, sustentabilidade
+      e renda. Cada escolha molda o futuro do seu negócio agrícola.
+    </p>
+  </section>
+
+  <section class="selecao">
+    <h2>Escolha sua cultura</h2>
+    <div class="cards-grid" id="cardsGrid">
+      {% for c in culturas %}
+      <button class="card-cultura" data-cultura-id="{{ c.id }}" onclick="selecionar('{{ c.id }}')">
+        <div class="card-icone-wrap">
+          <div class="card-icone" style="background-image: url('/static/sprites/culturas/{{ c.sprite }}');"></div>
+        </div>
+        <span class="card-nome">{{ c.nome }}</span>
+        <span class="card-tagline">{{ c.tagline }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <footer>
+    <button class="btn-comecar" id="btnComecar" onclick="comecar()">Começar</button>
+  </footer>
+
+</div>
+
+<script>
+let culturaSelecionada = null;
+
+function selecionar(culturaId) {
+  culturaSelecionada = culturaId;
+  document.querySelectorAll('.card-cultura').forEach(card => {
+    card.classList.toggle('selecionado', card.dataset.culturaId === culturaId);
+  });
+  document.getElementById('btnComecar').classList.add('ativo');
+}
+
+function comecar() {
+  if (!culturaSelecionada) return;
+  const btn = document.getElementById('btnComecar');
+  const textoOriginal = btn.textContent;
+  btn.textContent = 'Carregando...';
+
+  fetch('/simulador/iniciar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cultura: culturaSelecionada })
+  })
+  .then(async r => {
+    if (!r.ok) {
+      const texto = await r.text();
+      throw new Error('Servidor respondeu ' + r.status + ': ' + texto.slice(0, 300));
+    }
+    window.location.href = '/simulador/decisao';
+  })
+  .catch(err => {
+    btn.textContent = textoOriginal;
+    console.error('Erro ao iniciar simulador:', err);
+    alert('Não foi possível iniciar o simulador. Veja o console (F12) ou o terminal do Flask para detalhes.\n\n' + err.message);
+  });
+}
+</script>
+</body>
+</html>

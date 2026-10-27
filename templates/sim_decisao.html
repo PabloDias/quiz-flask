@@ -1,0 +1,330 @@
+{# ============================================================
+   sim_decisao.html
+   Tela de decisao do Simulador do Produtor
+   Convertido do mockup do Claude Design para Jinja2 / Flask
+
+   Variaveis esperadas do app.py (via render_template):
+     safra_label       -> str, ex "Safra 1"
+     decision_number   -> int, ex 3
+     decision_total    -> int, ex 12
+     situacao          -> dict: {titulo, contexto, icone}
+     opcoes            -> list de dict: {id, texto}
+     indicadores       -> dict: {producao, custos, agua, sustentabilidade, renda}
+     talhoes           -> list de dict: {n, estado}  (estado: 'vazio'|'broto'|'meio'|'maduro')
+   ============================================================ #}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador do Produtor</title>
+<style>
+  @keyframes deltaFloat {
+    0%   { opacity: 0; transform: translateY(4px) scale(0.9); }
+    15%  { opacity: 1; transform: translateY(0) scale(1); }
+    75%  { opacity: 1; transform: translateY(-6px); }
+    100% { opacity: 0; transform: translateY(-14px); }
+  }
+
+  :root {
+    --bg-deep: #12160F;
+    --bg-panel: oklch(0.24 0.018 140);
+    --bg-card: oklch(0.285 0.02 140);
+    --bg-card-hi: oklch(0.33 0.022 140);
+    --border-soft: oklch(0.4 0.03 140 / 0.55);
+    --border-hair: oklch(0.4 0.03 140 / 0.3);
+    --green: oklch(0.64 0.135 145);
+    --green-dim: oklch(0.4 0.09 145);
+    --green-soft-bg: oklch(0.64 0.135 145 / 0.14);
+    --amber: oklch(0.77 0.15 78);
+    --amber-dim: oklch(0.5 0.12 78);
+    --amber-soft-bg: oklch(0.77 0.15 78 / 0.14);
+    --text: #F1EDE2;
+    --text-dim: oklch(0.74 0.015 95);
+    --text-faint: oklch(0.55 0.015 110);
+    --good: var(--green);
+    --bad: oklch(0.62 0.17 25);
+    --font-head: 'Barlow Condensed', 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* escala fluida 17-21 pol a 1920px base */
+    --sp-1: clamp(4px, 0.35vw, 7px);
+    --sp-2: clamp(8px, 0.7vw, 14px);
+    --sp-3: clamp(14px, 1.1vw, 22px);
+    --sp-4: clamp(20px, 1.6vw, 32px);
+    --sp-5: clamp(28px, 2.2vw, 44px);
+    --radius-md: clamp(10px, 0.8vw, 16px);
+    --radius-lg: clamp(16px, 1.2vw, 24px);
+    --fs-eyebrow: clamp(13px, 1vw, 17px);
+    --fs-title: clamp(26px, 2.1vw, 38px);
+    --fs-situation: clamp(30px, 2.6vw, 46px);
+    --fs-body: clamp(16px, 1.3vw, 21px);
+    --fs-button: clamp(20px, 1.7vw, 28px);
+    --fs-indicator-label: clamp(13px, 1vw, 16px);
+    --fs-indicator-num: clamp(20px, 1.6vw, 27px);
+    --fs-delta: clamp(15px, 1.2vw, 20px);
+    --btn-min-h: clamp(80px, 8vh, 108px);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #000; height: 100%; }
+
+  .app {
+    width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    background: var(--bg-deep); color: var(--text);
+    font-family: var(--font-body);
+    display: flex; flex-direction: column;
+  }
+
+  header { flex: 0 0 auto; padding: var(--sp-4) var(--sp-5) var(--sp-2); display: flex; flex-direction: column; gap: var(--sp-2); }
+  .header-top { display: flex; align-items: baseline; justify-content: space-between; }
+  .header-left { display: flex; align-items: baseline; gap: var(--sp-3); }
+  h1 { margin: 0; font-family: var(--font-head); font-weight: 800; letter-spacing: 0.04em; font-size: var(--fs-title); color: var(--text); text-transform: uppercase; }
+  .eyebrow { font-family: var(--font-mono); font-size: var(--fs-eyebrow); color: var(--amber); letter-spacing: 0.08em; }
+  .safra-info { font-family: var(--font-head); font-size: var(--fs-title); font-weight: 700; color: var(--text-dim); white-space: nowrap; }
+  .progress-track { width: 100%; height: clamp(4px, 0.4vh, 7px); background: var(--bg-panel); border-radius: 99px; overflow: hidden; border: 1px solid var(--border-hair); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green)); border-radius: 99px; transition: width 0.4s ease; }
+
+  /* Indicadores agora ficam no TOPO, logo abaixo do header - barra compacta */
+  .indicadores-topo { flex: 0 0 auto; background: var(--bg-panel); border-bottom: 1px solid var(--border-soft); padding: var(--sp-3) var(--sp-5); }
+  .indicadores-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-4); }
+  .indicador { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+  .indicador-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .indicador-label { font-family: var(--font-mono); font-size: var(--fs-indicator-label); letter-spacing: 0.08em; color: var(--text-faint); text-transform: uppercase; }
+  .indicador-valor { font-family: var(--font-head); font-size: var(--fs-indicator-num); font-weight: 700; color: var(--text); }
+  .indicador-track { position: relative; width: 100%; height: clamp(10px, 1vh, 16px); background: var(--bg-card); border-radius: 99px; border: 1px solid var(--border-hair); overflow: visible; }
+  .indicador-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+  .indicador-delta { position: absolute; right: 0; top: -1.9em; font-family: var(--font-head); font-weight: 700; font-size: var(--fs-delta); animation: deltaFloat 2.4s ease-out forwards; display: none; }
+  .indicador-delta.pos { color: var(--good); }
+  .indicador-delta.neg { color: var(--bad); }
+
+  /* Faixa da fazenda: grid 2 linhas x 3 colunas, compacta mas com espaco real */
+  .fazenda-rodape { flex: 0 0 auto; height: clamp(150px, 17vh, 210px); padding: var(--sp-3) var(--sp-5); display: flex; align-items: stretch; gap: var(--sp-4); background: var(--bg-panel); border-top: 1px solid var(--border-soft); }
+  .celeiro-wrap-mini { flex: 0 0 clamp(70px, 6vw, 110px); display: flex; align-items: center; justify-content: center; }
+  .celeiro-mini { position: relative; width: 72%; aspect-ratio: 1 / 0.92; }
+  .celeiro-mini .corpo { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 4px; }
+  .celeiro-mini .telhado { position: absolute; left: -6%; right: -6%; bottom: 58%; height: 0; border-left: 56% solid transparent; border-right: 56% solid transparent; border-bottom: clamp(16px,1.6vw,26px) solid var(--amber-dim); }
+
+  .talhoes-mini { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: var(--sp-2); }
+  .talhao-mini {
+    border: 1px solid var(--border-soft); border-radius: clamp(8px, 0.6vw, 12px);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  /* Cada talhao e uma pilha de 3 "bandas" horizontais, cada uma repetindo
+     UM tile especifico do Kenney Tiny Farm lado a lado (nao esticado).
+     Familia "sem tratamento" (coluna 11 da folha): tile_0012 / 0024 / 0036.
+     Familia "tratada" (coluna 0 da folha, linhas 1-3): tile_0013 / 0025 / 0037.
+     Estado vazio = sem tratamento, sem icone. Demais estados = tratada + icone por cima. */
+  .talhao-banda { flex: 1; background-repeat: repeat-x; background-size: clamp(20px, 1.7vw, 30px) 100%; image-rendering: pixelated; }
+
+  .talhao-mini[data-estado="vazio"] .banda-1 { background-image: url('/static/sprites/talhao/tile_0012.png'); }
+  .talhao-mini[data-estado="vazio"] .banda-2 { background-image: url('/static/sprites/talhao/tile_0024.png'); }
+  .talhao-mini[data-estado="vazio"] .banda-3 { background-image: url('/static/sprites/talhao/tile_0036.png'); }
+
+  .talhao-mini:not([data-estado="vazio"]) .banda-1 { background-image: url('/static/sprites/talhao/tile_0013.png'); }
+  .talhao-mini:not([data-estado="vazio"]) .banda-2 { background-image: url('/static/sprites/talhao/tile_0025.png'); }
+  .talhao-mini:not([data-estado="vazio"]) .banda-3 { background-image: url('/static/sprites/talhao/tile_0037.png'); }
+
+  .talhao-mini-sprite {
+    display: none;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: clamp(36px, 3vw, 52px); aspect-ratio: 1; border-radius: 6px;
+    background-size: cover; background-position: center; image-rendering: pixelated;
+    z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .talhao-mini:not([data-estado="vazio"]) .talhao-mini-sprite { display: block; }
+  .talhao-mini-sprite[data-estado="broto"]  { background-image: url('/static/sprites/talhao/tile_0005.png'); }
+  .talhao-mini-sprite[data-estado="meio"]   { background-image: url('/static/sprites/talhao/tile_0007.png'); }
+  .talhao-mini-sprite[data-estado="maduro"] { background-image: url('/static/sprites/talhao/tile_0008.png'); }
+
+  /* Variante para a cultura Gado Leiteiro: troca o icone de crescimento */
+  .talhao-mini-sprite[data-cultura="gado_leiteiro"][data-estado="broto"]  { background-image: url('/static/sprites/talhao/tile_0120.png'); } /* ovelha */
+  .talhao-mini-sprite[data-cultura="gado_leiteiro"][data-estado="meio"]   { background-image: url('/static/sprites/talhao/tile_0122.png'); } /* galinha */
+  .talhao-mini-sprite[data-cultura="gado_leiteiro"][data-estado="maduro"] { background-image: url('/static/sprites/talhao/tile_0121.png'); } /* vaca */
+
+  .talhao-mini-label {
+    position: absolute; bottom: var(--sp-1); left: var(--sp-1); z-index: 3;
+    font-family: var(--font-mono); font-size: clamp(10px, 0.8vw, 13px); color: var(--text);
+    background: rgba(0,0,0,0.55); padding: 2px 7px; border-radius: 99px; letter-spacing: 0.02em;
+  }
+
+  .situacao-wrap { flex: 1 1 auto; min-height: 0; padding: var(--sp-2) var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); }
+  .situacao-card { flex: 0 1 auto; background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: var(--sp-4); display: flex; align-items: center; gap: var(--sp-4); }
+  .situacao-icone { flex: 0 0 auto; width: clamp(72px, 6vw, 108px); height: clamp(72px, 6vw, 108px); border-radius: 50%; background: var(--amber-soft-bg); border: 2px solid var(--amber-dim); display: flex; align-items: center; justify-content: center; font-size: clamp(28px, 2.4vw, 42px); }
+  .situacao-texto { flex: 1; display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+  .situacao-titulo { margin: 0; font-family: var(--font-head); font-weight: 800; font-size: var(--fs-situation); letter-spacing: 0.01em; color: var(--text); text-transform: uppercase; text-wrap: pretty; }
+  .situacao-contexto { margin: 0; font-size: var(--fs-body); line-height: 1.4; color: var(--text-dim); text-wrap: pretty; }
+
+  .opcoes { flex: 1; display: flex; flex-direction: column; gap: var(--sp-3); min-height: 0; justify-content: center; }
+  .btn-opcao {
+    min-height: var(--btn-min-h); width: 100%; background: var(--bg-card);
+    border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+    color: var(--text); font-family: var(--font-body); font-weight: 600; font-size: var(--fs-button);
+    text-align: left; padding: 0 var(--sp-4); cursor: pointer; transition: background 0.15s ease;
+  }
+  .btn-opcao:hover { background: var(--bg-card-hi); }
+  .btn-opcao:active { transform: scale(0.99); }
+  .btn-opcao.cor-1 { border-left: clamp(5px, 0.4vw, 8px) solid var(--green); }
+  .btn-opcao.cor-1:active { background: var(--green-soft-bg); }
+  .btn-opcao.cor-2 { border-left: clamp(5px, 0.4vw, 8px) solid var(--amber); }
+  .btn-opcao.cor-2:active { background: var(--amber-soft-bg); }
+  .btn-opcao.cor-3 { border-left: clamp(5px, 0.4vw, 8px) solid var(--text-faint); }
+  .btn-opcao.cor-3:active { background: var(--bg-panel); }
+  .btn-opcao:disabled { opacity: 0.5; cursor: default; }
+
+  footer { flex: 0 0 auto; }
+
+  /* overlay de feedback inline */
+  .feedback-overlay {
+    position: absolute; inset: 0; background: rgba(18,22,15,0.92);
+    display: none; align-items: center; justify-content: center; padding: var(--sp-5); z-index: 20;
+  }
+  .feedback-overlay.ativo { display: flex; }
+  .feedback-card {
+    max-width: 900px; background: var(--bg-panel); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3);
+  }
+  .feedback-texto { font-size: var(--fs-situation); font-family: var(--font-head); font-weight: 700; color: var(--text); line-height: 1.3; }
+  .feedback-servico { display: none; align-self: flex-start; background: var(--green-soft-bg); border: 1px solid var(--green-dim); color: var(--green); font-family: var(--font-mono); font-size: var(--fs-body); padding: var(--sp-2) var(--sp-3); border-radius: var(--radius-md); }
+  .feedback-servico.ativo { display: block; }
+  .btn-continuar { align-self: flex-end; min-height: var(--btn-min-h); padding: 0 var(--sp-5); background: var(--green); color: var(--bg-deep); border: none; border-radius: var(--radius-md); font-family: var(--font-head); font-weight: 800; font-size: var(--fs-button); text-transform: uppercase; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <h1>Simulador do Produtor</h1>
+        <span class="eyebrow">EXPOCODÓ 2026 · A FORÇA JOVEM NO AGRO</span>
+      </div>
+      <div class="safra-info">
+        {{ safra_label }} <span style="color: var(--border-soft);">·</span> Decisão {{ decision_number }} de {{ decision_total }}
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: {{ (decision_number / decision_total * 100) | round(1) }}%;"></div>
+    </div>
+  </header>
+
+  <div class="indicadores-topo">
+    <div class="indicadores-grid">
+      {% for chave, label in [('producao','Produção'), ('custos','Custos'), ('agua','Água'), ('sustentabilidade','Sustentabilidade'), ('renda','Renda')] %}
+      <div class="indicador" data-chave="{{ chave }}">
+        <div class="indicador-top">
+          <span class="indicador-label">{{ label }}</span>
+          <span class="indicador-valor" data-valor>{{ indicadores[chave] }}</span>
+        </div>
+        <div class="indicador-track">
+          <div class="indicador-fill" data-fill style="width: {{ indicadores[chave] }}%;"></div>
+          <span class="indicador-delta" data-delta></span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <section class="situacao-wrap">
+    <div class="situacao-card">
+      <div class="situacao-icone">{{ situacao.icone_emoji | default('🌦️') }}</div>
+      <div class="situacao-texto">
+        <h2 class="situacao-titulo">{{ situacao.titulo }}</h2>
+        <p class="situacao-contexto">{{ situacao.contexto }}</p>
+      </div>
+    </div>
+
+    <div class="opcoes">
+      {% for opcao in opcoes %}
+      <button class="btn-opcao cor-{{ loop.index }}" data-opcao-id="{{ opcao.id }}" onclick="escolher('{{ opcao.id }}')">
+        {{ opcao.texto }}
+      </button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="fazenda-rodape">
+    <div class="celeiro-wrap-mini">
+      <div class="celeiro-mini">
+        <div class="corpo"></div>
+        <div class="telhado"></div>
+      </div>
+    </div>
+    <div class="talhoes-mini">
+      {% for talhao in talhoes %}
+      <div class="talhao-mini" data-estado="{{ talhao.estado }}">
+        <div class="talhao-banda banda-1"></div>
+        <div class="talhao-banda banda-2"></div>
+        <div class="talhao-banda banda-3"></div>
+        <div class="talhao-mini-sprite" data-estado="{{ talhao.estado }}" data-cultura="{{ cultura_id }}"></div>
+        <span class="talhao-mini-label">T{{ talhao.n }} · {{ talhao.estado }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="feedback-overlay" id="feedbackOverlay">
+    <div class="feedback-card">
+      <div class="feedback-texto" id="feedbackTexto"></div>
+      <div class="feedback-servico" id="feedbackServico"></div>
+      <button class="btn-continuar" id="btnContinuar">Continuar</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function escolher(opcaoId) {
+  document.querySelectorAll('.btn-opcao').forEach(b => b.disabled = true);
+
+  const resp = await fetch('/simulador/escolher/' + opcaoId, { method: 'POST' });
+  const data = await resp.json();
+
+  // anima cada indicador do valor anterior pro novo, com delta flutuante
+  for (const chave of ['producao', 'custos', 'agua', 'sustentabilidade', 'renda']) {
+    const el = document.querySelector('.indicador[data-chave="' + chave + '"]');
+    const fill = el.querySelector('[data-fill]');
+    const valorEl = el.querySelector('[data-valor]');
+    const deltaEl = el.querySelector('[data-delta]');
+
+    const novo = data.atual[chave];
+    const efeito = data.efeitos[chave] || 0;
+
+    fill.style.width = novo + '%';
+    valorEl.textContent = novo;
+
+    if (efeito !== 0) {
+      deltaEl.textContent = (efeito > 0 ? '+' : '') + Math.round(efeito);
+      deltaEl.className = 'indicador-delta ' + (efeito > 0 ? 'pos' : 'neg');
+      deltaEl.style.display = 'block';
+      // reinicia a animacao
+      deltaEl.style.animation = 'none';
+      void deltaEl.offsetWidth;
+      deltaEl.style.animation = null;
+    }
+  }
+
+  // mostra o card de feedback
+  document.getElementById('feedbackTexto').textContent = data.feedback;
+  const servicoEl = document.getElementById('feedbackServico');
+  if (data.servico) {
+    servicoEl.textContent = 'Serviço SAGRIMA: ' + data.servico;
+    servicoEl.classList.add('ativo');
+  } else {
+    servicoEl.classList.remove('ativo');
+  }
+  document.getElementById('feedbackOverlay').classList.add('ativo');
+
+  document.getElementById('btnContinuar').onclick = function () {
+    if (data.fim) {
+      window.location.href = '/simulador/resultado';
+    } else {
+      window.location.href = '/simulador/decisao';
+    }
+  };
+}
+</script>
+</body>
+</html>
